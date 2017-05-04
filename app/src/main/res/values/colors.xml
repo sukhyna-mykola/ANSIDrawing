@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="bright_pink">#FF007F</color>
-    <color name="red">#FF0000</color>
-    <color name="orange">#FF7F00</color>
-    <color name="yellow">#FFFF00</color>
-    <color name="chartreuse">#7FFF00</color>
-    <color name="green">#00FF00</color>
-    <color name="spring_green">#00FF7F</color>
-    <color name="cyan">#00FFFF</color>
-    <color name="azure">#007FFF</color>
-    <color name="blue">#0000FF</color>
-    <color name="violet">#7F00FF</color>
-    <color name="magenta">#FF00FF</color>
+    <color name="colorPrimary">#ff3F51B5</color>
+    <color name="colorPrimaryDark">#ff303F9F</color>
+    <color name="colorAccent">#ffFF4081</color>
+    <color name="bright_pink">#ffFF007F</color>
+    <color name="red">#ffFF0000</color>
+    <color name="orange">#ffFF7F00</color>
+    <color name="yellow">#ffFFFF00</color>
+    <color name="chartreuse">#ff7FFF00</color>
+    <color name="green">#ff00FF00</color>
+    <color name="spring_green">#ff00FF7F</color>
+    <color name="cyan">#ff00FFFF</color>
+    <color name="azure">#ff007FFF</color>
+    <color name="blue">#ff0000FF</color>
+    <color name="violet">#ff7F00FF</color>
+    <color name="magenta">#ffFF00FF</color>
 
     <array name="colors">
         <item>@color/bright_pink</item>

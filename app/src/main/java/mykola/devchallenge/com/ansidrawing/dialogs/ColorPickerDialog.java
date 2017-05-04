@@ -1,4 +1,4 @@
-package mykola.devchallenge.com.ansidrawing;
+package mykola.devchallenge.com.ansidrawing.dialogs;
 
 
 import android.app.Dialog;
@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.adapters.ColorPickerAdapter;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackColor;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;

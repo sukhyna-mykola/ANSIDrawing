@@ -1,4 +1,4 @@
-package mykola.devchallenge.com.ansidrawing;
+package mykola.devchallenge.com.ansidrawing.dialogs;
 
 
 import android.app.Dialog;
@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.adapters.SymbolPickerAdapter;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSymbol;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
@@ -49,7 +50,7 @@ public class SymbolPickerDialog extends DialogFragment implements CallbackSymbol
         View v = LayoutInflater.from(getContext()).inflate(R.layout.list_picker_fragment, null);
 
         list = (RecyclerView) v.findViewById(R.id.list);
-        list.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        list.setLayoutManager(new GridLayoutManager(getContext(), 5));
         adapter = new SymbolPickerAdapter(this,dataHelper.getSymbols(), getArguments().getInt(SELECTED_SYMBOL));
         list.setAdapter(adapter);
 

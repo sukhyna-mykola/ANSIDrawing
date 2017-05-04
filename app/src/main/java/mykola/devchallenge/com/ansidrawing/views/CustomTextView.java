@@ -40,7 +40,7 @@ public class CustomTextView extends TextView {
                 Pixel p = helper.activeCanvas.getPixel(i, j);
                 if (p != null) {
                     paint.setColor(p.getColor());
-                    paint.setTextSize(p.getSize());
+                    paint.setTextSize(p.getSizeSymbol());
                     canvas.drawText(Character.toString((char) p.getSymbol()), i * 10, j * 10, paint);
                 }
 

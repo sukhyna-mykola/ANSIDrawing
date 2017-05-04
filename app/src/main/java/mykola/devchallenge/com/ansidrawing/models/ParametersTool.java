@@ -6,12 +6,20 @@ package mykola.devchallenge.com.ansidrawing.models;
 
 public class ParametersTool {
     protected int color;
-    protected int size;
+    protected int sizeSymbol;
     protected int symbol;
+    protected int sizeTool;
 
-    public ParametersTool(int size, int color, int symbol) {
+    public ParametersTool(int sizeSymbol, int color, int symbol, int sizeTool) {
         this.color = color;
-        this.size = size;
+        this.sizeSymbol = sizeSymbol;
+        this.symbol = symbol;
+        this.sizeTool  = sizeTool;
+    }
+
+    public ParametersTool(int sizeSymbol, int color, int symbol) {
+        this.color = color;
+        this.sizeSymbol = sizeSymbol;
         this.symbol = symbol;
     }
 
@@ -26,12 +34,20 @@ public class ParametersTool {
         this.color = color;
     }
 
-    public int getSize() {
-        return size;
+    public int getSizeSymbol() {
+        return sizeSymbol;
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public void setSizeSymbol(int sizeSymbol) {
+        this.sizeSymbol = sizeSymbol;
+    }
+
+    public int getSizeTool() {
+        return sizeTool;
+    }
+
+    public void setSizeTool(int sizeTool) {
+        this.sizeTool = sizeTool;
     }
 
     public int getSymbol() {

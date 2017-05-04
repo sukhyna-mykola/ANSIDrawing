@@ -26,29 +26,120 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+
+            <LinearLayout
                 android:id="@+id/tool_size_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClick" />
+                android:background="@drawable/menu_button_bg"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <ImageButton
-                android:id="@+id/tool_type_btn"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SIZE TOOL" />
+
+                <TextView
+                    android:id="@+id/tool_size_text"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/symbol_size_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClick" />
+                android:background="@drawable/menu_button_bg"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <Button
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="size symbol" />
+
+                <TextView
+                    android:id="@+id/symbol_size_text"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/tool_color_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClick" />
+                android:background="@drawable/menu_button_bg"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <Button
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="COLOR" />
+
+                <ImageView
+                    android:id="@+id/tool_color_image"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/tool_symbol_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onClick" />
+                android:background="@drawable/menu_button_bg"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SYNBOL" />
+
+                <TextView
+                    android:id="@+id/tool_symbol_text"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tool_type_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/menu_button_bg"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TYPE" />
+
+                <ImageView
+                    android:id="@+id/tool_type_image"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

@@ -1,10 +1,6 @@
 package mykola.devchallenge.com.ansidrawing.helpers;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +9,7 @@ import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.models.Canvas;
 import mykola.devchallenge.com.ansidrawing.models.ParametersScreen;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
+import mykola.devchallenge.com.ansidrawing.models.tools.BrushTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
@@ -23,7 +20,7 @@ import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 public class DrawHelper {
     private List<Canvas> canvasList;
     private int activeCanvaspPosition;
-    public  Canvas activeCanvas;
+    public Canvas activeCanvas;
     private Tool tool;
     private ParametersTool parametersTool;
     private ParametersScreen parametersScreen;
@@ -33,13 +30,13 @@ public class DrawHelper {
     ;
 
 
-    public DrawHelper(Context c, int size, int color, int symbol, float width, float height) {
+    public DrawHelper(Context c, int sizeSymbol, int color, int symbol, int sizeTool, float width, float height) {
 
         updator = (CallbackUpdate) c;
-        parametersTool = new ParametersTool(size, color, symbol);
+        parametersTool = new ParametersTool(sizeSymbol, color, symbol, sizeTool);
         parametersScreen = new ParametersScreen(width, height);
 
-        tool = new PencilTool(parametersTool);
+        tool = new BrushTool(parametersTool);
 
         canvasList = new ArrayList<>();
         activeCanvas = new Canvas(parametersScreen);
@@ -58,13 +55,28 @@ public class DrawHelper {
 
         tool.draw(convertX, convertY, getActiveCanvas());
 
-        updator.update();
+        updator.updateCanvas();
     }
 
+    public Tool getTool() {
+        return tool;
+    }
 
+    public void setTool(Tool tool) {
+        this.tool = tool;
+    }
+
+    public void prepareTool(Tool tool) {
+        this.tool = tool;
+        this.tool.setParametersTool(parametersTool);
+    }
 
     public void setSizeTool(int size) {
-        parametersTool.setSize(size);
+        parametersTool.setSizeTool(size);
+    }
+
+    public void setSizeSymbol(int size) {
+        parametersTool.setSizeSymbol(size);
     }
 
     public void setColorTool(int color) {
@@ -75,8 +87,12 @@ public class DrawHelper {
         parametersTool.setSymbol(symbol);
     }
 
+    public int getSizeSymbol() {
+        return parametersTool.getSizeSymbol();
+    }
+
     public int getSizeTool() {
-        return parametersTool.getSize();
+        return parametersTool.getSizeTool();
     }
 
     public int getColorTool() {
@@ -86,6 +102,7 @@ public class DrawHelper {
     public int getSymbolTool() {
         return parametersTool.getSymbol();
     }
+
 
     private Canvas getActiveCanvas() {
         try {

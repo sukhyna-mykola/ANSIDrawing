@@ -30,7 +30,7 @@ public class SymbolPickerAdapter extends RecyclerView.Adapter<SymbolPickerAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.color_item, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.symbol_item, null);
         float width =  v.getWidth();
         v.setMinimumHeight((int) (width/3));
 
@@ -51,7 +51,7 @@ public class SymbolPickerAdapter extends RecyclerView.Adapter<SymbolPickerAdapte
         else holder.checkStatus.setVisibility(View.INVISIBLE);
 
 
-        holder.frameLayout.setOnClickListener(new View.OnClickListener() {
+        holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callbackSymbol.setSelectedSymbol(data[position]);
@@ -69,14 +69,14 @@ public class SymbolPickerAdapter extends RecyclerView.Adapter<SymbolPickerAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public FrameLayout frameLayout;
+        public View view;
         public ImageView checkStatus;
         public TextView symbolText;
 
 
         public ViewHolder(View view) {
             super(view);
-            frameLayout = (FrameLayout) view;
+             this.view = view;
             checkStatus = (ImageView) view.findViewById(R.id.checkItem);
             symbolText = (TextView) view.findViewById(R.id.textItem);
 

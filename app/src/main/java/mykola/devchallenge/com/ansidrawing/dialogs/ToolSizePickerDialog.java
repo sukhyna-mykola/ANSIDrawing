@@ -1,4 +1,4 @@
-package mykola.devchallenge.com.ansidrawing;
+package mykola.devchallenge.com.ansidrawing.dialogs;
 
 
 import android.app.Dialog;
@@ -13,20 +13,20 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSize;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 
-import static mykola.devchallenge.com.ansidrawing.SymbolPickerDialog.SELECTED_SYMBOL;
+import static mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog.SELECTED_SYMBOL;
 
 /**
  * Created by mykola on 04.05.17.
  */
 
-public class SizePickerDialog extends DialogFragment {
+public class ToolSizePickerDialog extends DialogFragment {
 
     public static final String SELECTED_SIZE = "selected_size";
 
-    private DataHelper dataHelper;
 
     private CallbackSize callbackSize;
 
@@ -34,12 +34,13 @@ public class SizePickerDialog extends DialogFragment {
     private TextView textSize;
     private TextView previewText;
 
-    public static SizePickerDialog newInstance(int selectedSize, int selectedSymbol) {
+    public static ToolSizePickerDialog newInstance(int selectedSize, int selectedSymbol) {
 
         Bundle args = new Bundle();
         args.putInt(SELECTED_SIZE, selectedSize);
         args.putInt(SELECTED_SYMBOL, selectedSymbol);
-        SizePickerDialog fragment = new SizePickerDialog();
+
+        ToolSizePickerDialog fragment = new ToolSizePickerDialog();
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,19 +49,17 @@ public class SizePickerDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        dataHelper = DataHelper.get(getContext());
-
         View v = LayoutInflater.from(getContext()).inflate(R.layout.size_picker_fragment, null);
 
         seekSize = (SeekBar) v.findViewById(R.id.seekSize);
         textSize  = (TextView) v.findViewById(R.id.textSize);
         previewText = (TextView) v.findViewById(R.id.previewSize);
 
-        int size = getArguments().getInt(SELECTED_SIZE)-5;
+        int size = getArguments().getInt(SELECTED_SIZE)-1;
         int symbol =  getArguments().getInt(SELECTED_SYMBOL);
 
         seekSize.setProgress(size);
-        seekSize.setMax(45);
+        seekSize.setMax(9);
 
         previewText.setTextSize(size);
         previewText.setText(Character.toString((char)symbol));
@@ -72,8 +71,9 @@ public class SizePickerDialog extends DialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    previewText.setTextSize(progress + 5);
-                    textSize.setText(String.valueOf(progress+5));
+                    previewText.setTextSize(progress + 1);
+
+                    textSize.setText(String.valueOf(progress+1));
                 }
             }
 
@@ -94,7 +94,7 @@ public class SizePickerDialog extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        callbackSize.setSelectedSize(seekSize.getProgress()+5);
+                        callbackSize.setSelectedSizeTool(seekSize.getProgress()+1);
                         dismiss();
                     }
                 })
