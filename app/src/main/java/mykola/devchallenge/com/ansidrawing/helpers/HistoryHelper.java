@@ -3,7 +3,7 @@ package mykola.devchallenge.com.ansidrawing.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import mykola.devchallenge.com.ansidrawing.models.Canvas;
+import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
 
 /**
@@ -37,13 +37,13 @@ public class HistoryHelper {
         notes.add(note);
     }
 
-    public void undo(Canvas canvas) {
+    public void undo(Surface surface) {
         if (positionNote - 1 >= 0) {
             HistoryNote note = notes.get(--positionNote);
 
-            for (int i = 0; i < canvas.getWidth(); i++) {
-                for (int j = 0; j < canvas.getHeight(); j++) {
-                    canvas.setPixel(i, j, note.getCanvas().getPixel(i, j));
+            for (int i = 0; i < surface.getWidth(); i++) {
+                for (int j = 0; j < surface.getHeight(); j++) {
+                    surface.setPixel(i, j, note.getSurface().getPixel(i, j));
                 }
 
             }
@@ -53,13 +53,13 @@ public class HistoryHelper {
 
     }
 
-    public void redo(Canvas canvas) {
+    public void redo(Surface surface) {
         if (positionNote + 1 < notes.size()) {
             HistoryNote note = notes.get(++positionNote);
 
-            for (int i = 0; i < canvas.getWidth(); i++) {
-                for (int j = 0; j < canvas.getHeight(); j++) {
-                    canvas.setPixel(i, j, note.getCanvas().getPixel(i, j));
+            for (int i = 0; i < surface.getWidth(); i++) {
+                for (int j = 0; j < surface.getHeight(); j++) {
+                    surface.setPixel(i, j, note.getSurface().getPixel(i, j));
                 }
 
             }

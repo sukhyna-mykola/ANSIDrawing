@@ -6,47 +6,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
-import mykola.devchallenge.com.ansidrawing.models.Canvas;
 import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
 import mykola.devchallenge.com.ansidrawing.models.ParametersScreen;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
+import mykola.devchallenge.com.ansidrawing.models.Preset;
+import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
+import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 
 /**
  * Created by mykola on 01.05.17.
  */
 
 public class DrawHelper {
-    private List<Canvas> canvasList;
+    private List<Surface> surfaceList;
     private int activeCanvaspPosition;
-    public Canvas activeCanvas;
+    public Surface activeSurface;
     private HistoryNote activeNote;
     private Tool tool;
+
+    private PresetHelper presetHelper;
     private ParametersTool parametersTool;
     private ParametersScreen parametersScreen;
     private CallbackUpdate updator;
+    private Context context;
 
     private StringBuilder s = new StringBuilder();
     ;
 
 
     public DrawHelper(Context c, int sizeSymbol, int color, int symbol, int sizeTool, float width, float height) {
-
+        this.context = c;
         updator = (CallbackUpdate) c;
         parametersTool = new ParametersTool(sizeSymbol, color, symbol, sizeTool);
         parametersScreen = new ParametersScreen(width, height);
 
         tool = new PencilTool(parametersTool);
 
-        canvasList = new ArrayList<>();
+        surfaceList = new ArrayList<>();
 
-        activeCanvas = new Canvas(parametersScreen);
-        activeNote = new HistoryNote("INIT", activeCanvas);
+        activeSurface = new Surface(parametersScreen);
+        activeNote = new HistoryNote("INIT", activeSurface);
         HistoryHelper.get().addNote(activeNote.clone());
 
 
-        canvasList.add(activeCanvas);
+        surfaceList.add(activeSurface);
 
 
         for (int i = 0; i < parametersScreen.getSCALE_HEIGHT() * parametersScreen.getSCALE_WIDTH(); i++) {
@@ -56,7 +61,7 @@ public class DrawHelper {
     }
 
     public void newHistoryNote() {
-        activeNote = new HistoryNote(tool.getName(),activeCanvas);
+        activeNote = new HistoryNote(tool.getName(), activeSurface);
     }
 
     public void endHistoryNote() {
@@ -64,19 +69,19 @@ public class DrawHelper {
     }
 
     public void undo() {
-        HistoryHelper.get().undo(getActiveCanvas());
+        HistoryHelper.get().undo(getActiveSurface());
         updator.updateCanvas();
     }
 
     public void redo() {
-        HistoryHelper.get().redo(getActiveCanvas());
+        HistoryHelper.get().redo(getActiveSurface());
         updator.updateCanvas();
     }
 
     public void draw(float x, float y) {
 
 
-        tool.draw((int) x, (int) y, getActiveCanvas());
+        tool.draw((int) x, (int) y, getActiveSurface());
 
         updator.updateCanvas();
     }
@@ -127,14 +132,39 @@ public class DrawHelper {
     }
 
 
-    private Canvas getActiveCanvas() {
+    private Surface getActiveSurface() {
         try {
-            activeCanvas = canvasList.get(activeCanvaspPosition);
+            activeSurface = surfaceList.get(activeCanvaspPosition);
 
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
-            activeCanvas = null;
+            activeSurface = null;
         }
-        return activeCanvas;
+        return activeSurface;
+    }
+
+    public CustomTextView preparePreset(Preset preset) {
+        presetHelper = new PresetHelper(preset, parametersScreen, context);
+        return presetHelper.getPresetView();
+    }
+
+    public void presetRotate() {
+        presetHelper.rotate();
+
+    }
+
+    public void presetScalePlus() {
+        presetHelper.scalePlus();
+
+    }
+
+    public void presetScaleMinus() {
+        presetHelper.scaleMinus();
+
+    }
+
+    public void move(int x, int y) {
+        presetHelper.move(x, y);
+
     }
 }

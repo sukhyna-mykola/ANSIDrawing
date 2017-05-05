@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tollSymbolTextView;
 
     private FrameLayout layers;
+    private GridLayout presetLayout;
     private CustomTextView canvas;
     private DrawHelper helper;
     private DataHelper dataHelper;
@@ -70,8 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             helper = new DrawHelper(context, symbolSize, color, symbol, toolSize, width, height);
 
-            canvas = new CustomTextView(context, helper);
-            canvas.setOnTouchListener((View.OnTouchListener) context);
+            canvas = new CustomTextView(context, helper.activeSurface, layers.getChildCount());
 
             layers.addView(canvas);
 
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         context = this;
+
         dataHelper = DataHelper.get(context);
 
         tollSizeTextView = (TextView) findViewById(R.id.tool_size_text);
@@ -97,8 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tollSymbolTextView = (TextView) findViewById(R.id.tool_symbol_text);
         symbolSizeTextView = (TextView) findViewById(R.id.symbol_size_text);
 
+        presetLayout = (GridLayout) findViewById(R.id.presetLayout);
+
         layers = (FrameLayout) findViewById(R.id.layers);
-        layers.setOnTouchListener(this);
         layers.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
 
 
@@ -107,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-
         return true;
 
     }
@@ -156,6 +158,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tool_type_btn:
                 ToolPickerDialog.newInstance(helper.getTool().getName())
                         .show(getSupportFragmentManager(), TOOL_PICKER_DIALOG);
+
+            case R.id.preset_btn:
+                presetLayout.setVisibility(View.VISIBLE);
+                layers.addView(helper.preparePreset(DataHelper.get(context).getPresets()[0]));
+                 canvas.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.presetCancel:
+                break;
+            case R.id.presetConfirm:
+                break;
+            case R.id.presetScaleMinus:
+                helper.presetScaleMinus();
+                break;
+            case R.id.presetScalePlus:
+                helper.presetScalePlus();
+                break;
+            case R.id.presetRotate:
+                helper.presetRotate();
                 break;
 
         }
@@ -181,8 +201,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (oldX != convertX || oldY != convertY) {
                     oldX = convertX;
                     oldY = convertY;
-                    helper.draw(convertX,convertY);
-                    return true;
+
+                    helper.draw(convertX, convertY);
+                    if (canvas.getVisibility() == View.INVISIBLE)
+                        helper.move(convertX, convertY);
+                    else
+
+                        return true;
                 }
                 return false;
             case MotionEvent.ACTION_UP:

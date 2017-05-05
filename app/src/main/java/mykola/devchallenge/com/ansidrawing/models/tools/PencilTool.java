@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.R;
-import mykola.devchallenge.com.ansidrawing.models.Canvas;
+import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.models.ChangedPixels;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
@@ -29,7 +29,7 @@ public class PencilTool extends Tool {
     }
 
     @Override
-    public ChangedPixels draw(int x, int y, Canvas canvas) {
+    public ChangedPixels draw(int x, int y, Surface surface) {
         List<Pixel> oldPixels = new ArrayList<>();
         List<Pixel> newPixels = new ArrayList<>();
 
@@ -38,10 +38,10 @@ public class PencilTool extends Tool {
         for (int i = (int) -delta; i < delta; i++) {
             for (int j = (int) -delta; j < delta; j++) {
                 try {
-                    Pixel oldPixel = canvas.getPixel(x + i, y + j);
+                    Pixel oldPixel = surface.getPixel(x + i, y + j);
 
                     Pixel newPixel = new Pixel(parametersTool.getSizeSymbol(), parametersTool.getColor(), parametersTool.getSymbol(), x + i, y + j);
-                    canvas.setPixel(x + i, y + j, newPixel);
+                    surface.setPixel(x + i, y + j, newPixel);
 
                     if (oldPixel != null)
                         oldPixels.add(oldPixel);

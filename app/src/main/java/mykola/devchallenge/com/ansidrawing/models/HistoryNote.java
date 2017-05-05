@@ -6,7 +6,7 @@ package mykola.devchallenge.com.ansidrawing.models;
 
 public class HistoryNote {
     private String action;
-    private Canvas canvas;
+    private Surface surface;
     // private ChangedPixels changedPixels;
 
     public HistoryNote(String action) {
@@ -39,21 +39,21 @@ public class HistoryNote {
         this.changedPixels.addOldPixels(changedPixels.getOldPixels());
     }*/
 
-    public Canvas getCanvas() {
-        return canvas;
+    public Surface getSurface() {
+        return surface;
     }
 
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
+    public void setSurface(Surface surface) {
+        this.surface = surface;
     }
 
-    public HistoryNote(String action, Canvas canvas) {
+    public HistoryNote(String action, Surface surface) {
 
         this.action = action;
-        this.canvas = canvas;
+        this.surface = surface;
     }
 
     public HistoryNote clone() {
-        return new HistoryNote(new String(action), canvas.clone());
+        return new HistoryNote(new String(action), surface.clone());
     }
 }

@@ -4,7 +4,7 @@ package mykola.devchallenge.com.ansidrawing.models;
  * Created by mykola on 01.05.17.
  */
 
-public class Canvas {
+public class Surface {
     private Pixel[][] pixels;
     private int width, height;
 
@@ -16,14 +16,22 @@ public class Canvas {
         return height;
     }
 
-    public Canvas(ParametersScreen parametersScreen) {
+    public Surface(ParametersScreen parametersScreen) {
         this.width = parametersScreen.getSCALE_WIDTH();
         this.height = parametersScreen.getSCALE_HEIGHT();
         this.pixels = new Pixel[width][height];
 
     }
 
-    public Canvas(Pixel[][] pixels) {
+    public void clear() {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                setPixel(i, j, null);
+            }
+        }
+    }
+
+    public Surface(Pixel[][] pixels) {
         this.pixels = pixels;
         this.width = pixels.length;
         this.height = pixels[0].length;
@@ -47,7 +55,7 @@ public class Canvas {
         }
     }
 
-    public Canvas clone() {
+    public Surface clone() {
         Pixel[][] newPixels = new Pixel[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -56,7 +64,7 @@ public class Canvas {
             }
 
         }
-        return new Canvas(newPixels);
+        return new Surface(newPixels);
     }
 
 }

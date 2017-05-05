@@ -15,6 +15,53 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <GridLayout
+        android:visibility="gone"
+        android:id="@+id/presetLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/presetScaleMinus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:src="@drawable/zoom_minus" />
+
+        <ImageButton
+            android:id="@+id/presetScalePlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:src="@drawable/zoom_plus" />
+
+        <ImageButton
+            android:id="@+id/presetRotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:src="@drawable/rotate" />
+
+        <android.support.v4.widget.Space android:layout_gravity="fill_horizontal" />
+
+        <ImageButton
+            android:id="@+id/presetConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:src="@drawable/ic_check_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/presetCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:src="@drawable/cancel" />
+
+
+    </GridLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +73,27 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:id="@+id/preset_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/menu_button_bg"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:padding="10dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Preser" />
+
+                <ImageView
+                    android:id="@+id/preset_image"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp" />
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/tool_size_btn"
                 android:layout_width="wrap_content"
@@ -140,6 +207,8 @@
                     android:layout_height="50dp" />
 
             </LinearLayout>
+
+
 
         </LinearLayout>
     </ScrollView>
