@@ -3,6 +3,7 @@ package mykola.devchallenge.com.ansidrawing.models.tools;
 import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.models.Canvas;
+import mykola.devchallenge.com.ansidrawing.models.ChangedPixels;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 
@@ -58,5 +59,5 @@ public abstract class Tool {
         this.parametersTool = parametersTool;
     }
 
-    public abstract List<Pixel> draw(int x, int y, Canvas canvas);
+    public abstract ChangedPixels draw(int x, int y, Canvas canvas);
 }

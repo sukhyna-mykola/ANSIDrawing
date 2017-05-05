@@ -7,7 +7,7 @@ package mykola.devchallenge.com.ansidrawing.models;
 public class ParametersScreen {
     private float REAL_HEIGHT, REAL_WIDTH;
     public static int SCALE_HEIGHT, SCALE_WIDTH;
-    private int KOEF_HEIGHT = 10, KOEF_WIDTH = 10;
+    public static int KOEF_HEIGHT = 10, KOEF_WIDTH = 10;
 
     public ParametersScreen() {
         calcParam();

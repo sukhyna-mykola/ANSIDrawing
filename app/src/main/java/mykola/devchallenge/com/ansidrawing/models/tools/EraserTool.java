@@ -7,6 +7,7 @@ import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.models.Canvas;
+import mykola.devchallenge.com.ansidrawing.models.ChangedPixels;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 
@@ -26,18 +27,20 @@ public class EraserTool extends Tool {
     }
 
     @Override
-    public List<Pixel> draw(int x, int y, Canvas canvas) {
-        List<Pixel> result = new ArrayList<>();
+    public ChangedPixels draw(int x, int y, Canvas canvas) {
+        List<Pixel> oldPixels = new ArrayList<>();
+        List<Pixel> newPixels = new ArrayList<>();
 
         double delta = parametersTool.getSizeTool() / 2.0;
 
         for (int i = (int) -delta; i < delta; i++) {
             for (int j = (int) -delta; j < delta; j++) {
                 try {
-                    Pixel del = canvas.getPixel(x + i, y + j);
-                    if (del != null) {
-                        result.add(del);
+                    Pixel oldPixel = canvas.getPixel(x + i, y + j);
+                    if (oldPixel != null) {
                         canvas.setPixel(x + i, y + j, null);
+                        oldPixels.add(oldPixel);
+                        newPixels.add(null);
                     }
 
                 } catch (Exception e) {
@@ -46,6 +49,6 @@ public class EraserTool extends Tool {
 
             }
         }
-        return result;
+        return new ChangedPixels(oldPixels,newPixels);
     }
 }

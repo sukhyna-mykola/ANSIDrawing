@@ -7,9 +7,9 @@ import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.models.Canvas;
+import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
 import mykola.devchallenge.com.ansidrawing.models.ParametersScreen;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
-import mykola.devchallenge.com.ansidrawing.models.tools.BrushTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
@@ -21,6 +21,7 @@ public class DrawHelper {
     private List<Canvas> canvasList;
     private int activeCanvaspPosition;
     public Canvas activeCanvas;
+    private HistoryNote activeNote;
     private Tool tool;
     private ParametersTool parametersTool;
     private ParametersScreen parametersScreen;
@@ -36,10 +37,15 @@ public class DrawHelper {
         parametersTool = new ParametersTool(sizeSymbol, color, symbol, sizeTool);
         parametersScreen = new ParametersScreen(width, height);
 
-        tool = new BrushTool(parametersTool);
+        tool = new PencilTool(parametersTool);
 
         canvasList = new ArrayList<>();
+
         activeCanvas = new Canvas(parametersScreen);
+        activeNote = new HistoryNote("INIT", activeCanvas);
+        HistoryHelper.get().addNote(activeNote.clone());
+
+
         canvasList.add(activeCanvas);
 
 
@@ -49,11 +55,28 @@ public class DrawHelper {
 
     }
 
-    public void draw(float x, float y) {
-        int convertY = (int) (y / parametersScreen.getKOEF_HEIGHT());
-        int convertX = (int) (x / parametersScreen.getKOEF_WIDTH());
+    public void newHistoryNote() {
+        activeNote = new HistoryNote(tool.getName(),activeCanvas);
+    }
 
-        tool.draw(convertX, convertY, getActiveCanvas());
+    public void endHistoryNote() {
+        HistoryHelper.get().addNote(activeNote.clone());
+    }
+
+    public void undo() {
+        HistoryHelper.get().undo(getActiveCanvas());
+        updator.updateCanvas();
+    }
+
+    public void redo() {
+        HistoryHelper.get().redo(getActiveCanvas());
+        updator.updateCanvas();
+    }
+
+    public void draw(float x, float y) {
+
+
+        tool.draw((int) x, (int) y, getActiveCanvas());
 
         updator.updateCanvas();
     }

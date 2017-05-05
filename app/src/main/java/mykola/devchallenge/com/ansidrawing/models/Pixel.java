@@ -1,7 +1,5 @@
 package mykola.devchallenge.com.ansidrawing.models;
 
-import android.graphics.Color;
-
 /**
  * Created by mykola on 01.05.17.
  */
@@ -14,7 +12,14 @@ public class Pixel extends ParametersTool {
         this.y = y;
     }
 
-    private int x,y;
+
+    private int x, y;
+
+
+    public Pixel(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public int getX() {
         return x;
@@ -30,6 +35,10 @@ public class Pixel extends ParametersTool {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public Pixel clone() {
+        return new Pixel(sizeSymbol, color, symbol, x, y);
     }
 
 

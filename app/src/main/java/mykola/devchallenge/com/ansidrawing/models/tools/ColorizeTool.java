@@ -5,6 +5,7 @@ import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.models.Canvas;
+import mykola.devchallenge.com.ansidrawing.models.ChangedPixels;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 
@@ -24,13 +25,13 @@ public class ColorizeTool extends Tool {
     }
 
     @Override
-    public List<Pixel> draw(int x, int y, Canvas canvas) {
+    public ChangedPixels draw(int x, int y, Canvas canvas) {
         List<Pixel> result = new ArrayList<>();
 
         Pixel p = canvas.getPixel(x,y);
 
         result.add(p);
 
-        return result;
+        return new ChangedPixels(result,result);
     }
 }

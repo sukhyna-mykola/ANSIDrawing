@@ -5,7 +5,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -28,6 +29,9 @@ import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 import mykola.devchallenge.com.ansidrawing.helpers.DrawHelper;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
+
+import static mykola.devchallenge.com.ansidrawing.models.ParametersScreen.KOEF_HEIGHT;
+import static mykola.devchallenge.com.ansidrawing.models.ParametersScreen.KOEF_WIDTH;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize, CallbackTool {
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int symbolSize = 10;
             int color = dataHelper.getColors()[0];
             int symbol = dataHelper.getSymbols()[0];
-            int toolSize = 10;
+            int toolSize = 1;
 
             helper = new DrawHelper(context, symbolSize, color, symbol, toolSize, width, height);
 
@@ -101,6 +105,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+
+        return true;
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_undo:
+                helper.undo();
+                return true;
+            case R.id.action_redo:
+                helper.redo();
+                return true;
+            case R.id.action_import:
+                return true;
+            case R.id.action_export:
+                return true;
+
+        }
+        return false;
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tool_size_btn:
@@ -129,25 +161,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    private int oldX, oldY;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
+
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
-                break;
+                helper.newHistoryNote();
+                return true;
             case MotionEvent.ACTION_MOVE:
-                helper.draw(x, y);
-                Log.d(TAG, "Move: " + x + "," + y);
-                break;
-            case MotionEvent.ACTION_UP:
 
-                break;
+                float x = event.getX();
+                float y = event.getY();
+                int convertY = (int) (y / KOEF_HEIGHT);
+                int convertX = (int) (x / KOEF_WIDTH);
+                if (oldX != convertX || oldY != convertY) {
+                    oldX = convertX;
+                    oldY = convertY;
+                    helper.draw(convertX,convertY);
+                    return true;
+                }
+                return false;
+            case MotionEvent.ACTION_UP:
+                helper.endHistoryNote();
+                return true;
+            default:
+                return false;
         }
 
-        return true;
+
     }
 
     @Override
