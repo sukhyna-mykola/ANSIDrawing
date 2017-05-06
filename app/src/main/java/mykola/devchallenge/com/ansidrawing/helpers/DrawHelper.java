@@ -6,10 +6,11 @@ import org.json.JSONException;
 
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
-import mykola.devchallenge.com.ansidrawing.models.ParametersScreen;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
+import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Preset;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
+import mykola.devchallenge.com.ansidrawing.models.tools.ColorizeTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
@@ -25,15 +26,17 @@ public class DrawHelper {
 
     private PresetHelper presetHelper;
     private FileHelper fileHelper;
+
     private ParametersTool parametersTool;
     private ParametersScreen parametersScreen;
+
     private CallbackUpdate updator;
+
     private Context context;
 
     private Surface surface;
 
-    private StringBuilder s = new StringBuilder();
-    ;
+    private int oldX, oldY;
 
 
     public Surface getSurface() {
@@ -77,12 +80,22 @@ public class DrawHelper {
         updator.updateCanvas();
     }
 
-    public void draw(float x, float y) {
+    public void draw(int x, int y) {
 
-        tool.draw((int) x, (int) y, surface);
-        updator.updateCanvas();
+        if (oldX != x || oldY != x) {
+
+            oldX = x;
+            oldY = x;
+
+            Pixel pixel = tool.draw(x, y, surface);
+
+            if (pixel != null && tool.getName().equals(ColorizeTool.COLORIZE)) {
+                setColorTool(pixel.getColor());
+                updator.updateViews();
+            }
+            updator.updateCanvas();
+        }
     }
-
 
     public Tool getTool() {
         return tool;
@@ -137,15 +150,14 @@ public class DrawHelper {
         updator.updateCanvas();
     }
 
-    public void presetConfirm() {
 
+    public void presetConfirm() {
         Surface presetSurface = presetHelper.getPresetSurface();
         for (int i = 0; i < presetSurface.getWidth(); i++) {
             for (int j = 0; j < presetSurface.getHeight(); j++) {
                 if (presetSurface.getPixel(i, j) != null && surface.getPixel(i, j) == null)
                     surface.setPixel(i, j, presetSurface.getPixel(i, j));
             }
-
         }
 
         activeNote = new HistoryNote("PRESET", surface);
@@ -156,7 +168,6 @@ public class DrawHelper {
 
         updator.updateViews();
         updator.updateCanvas();
-
     }
 
 
@@ -175,29 +186,30 @@ public class DrawHelper {
 
         updator.updateViews();
         updator.updateCanvas();
-
     }
 
     public void presetRotate() {
         presetHelper.rotate();
-
     }
 
     public void presetScalePlus() {
         presetHelper.scalePlus();
-
     }
 
     public void presetScaleMinus() {
         presetHelper.scaleMinus();
-
     }
 
     public void move(int x, int y) {
-        presetHelper.move(x, y);
+        if (oldX != x || oldY != x) {
+
+            oldX = x;
+            oldY = x;
+
+            presetHelper.move(x, y);
+        }
 
     }
-
 
     public void save(String fileName) {
         try {
@@ -211,13 +223,14 @@ public class DrawHelper {
     public void load(String s) {
         try {
             Surface loaded = fileHelper.load(s);
+
             for (int i = 0; i < surface.getWidth(); i++) {
                 for (int j = 0; j < surface.getHeight(); j++) {
                     surface.setPixel(i, j, loaded.getPixel(i, j));
                 }
 
             }
-            activeNote = new HistoryNote("IMPORT", surface);
+            activeNote = new HistoryNote("OPEN", surface);
 
             HistoryHelper.get().addNote(activeNote.clone());
             updator.updateCanvas();

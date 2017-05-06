@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import mykola.devchallenge.com.ansidrawing.models.ParametersScreen;
+import mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 
@@ -16,14 +16,12 @@ import mykola.devchallenge.com.ansidrawing.models.Surface;
 
 public class CustomTextView extends TextView {
     private Surface surface;
-    public static final int PRESET_ID = 654321;
 
-    public CustomTextView(Context context, Surface surface, int id) {
+    public CustomTextView(Context context, Surface surface) {
         super(context);
-
         this.surface = surface;
+
         setOnTouchListener((OnTouchListener) context);
-        setId(id);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
@@ -46,7 +44,8 @@ public class CustomTextView extends TextView {
                 if (p != null) {
                     paint.setColor(p.getColor());
                     paint.setTextSize(p.getSizeSymbol());
-                    canvas.drawText(Character.toString((char) p.getSymbol()), i * 10, j * 10, paint);
+                    canvas.drawText(Character.toString((char) p.getSymbol()),
+                            i * ParametersScreen.KOEF_WIDTH, j * ParametersScreen.KOEF_HEIGHT, paint);
                 }
 
             }

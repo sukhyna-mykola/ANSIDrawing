@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSize;
-import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 
 import static mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog.SELECTED_SYMBOL;
 
@@ -27,7 +26,7 @@ public class ToolSizePickerDialog extends DialogFragment {
 
     public static final String SELECTED_SIZE = "selected_size";
 
-
+    private static final int DELTA = 1;
     private CallbackSize callbackSize;
 
     private SeekBar seekSize;
@@ -52,28 +51,26 @@ public class ToolSizePickerDialog extends DialogFragment {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.size_picker_fragment, null);
 
         seekSize = (SeekBar) v.findViewById(R.id.seekSize);
-        textSize  = (TextView) v.findViewById(R.id.textSize);
+        textSize = (TextView) v.findViewById(R.id.textSize);
         previewText = (TextView) v.findViewById(R.id.previewSize);
 
-        int size = getArguments().getInt(SELECTED_SIZE)-1;
-        int symbol =  getArguments().getInt(SELECTED_SYMBOL);
+        int size = getArguments().getInt(SELECTED_SIZE);
+        final int symbol = getArguments().getInt(SELECTED_SYMBOL);
 
-        seekSize.setProgress(size);
+        seekSize.setProgress(size - DELTA);
         seekSize.setMax(9);
 
-        previewText.setTextSize(size);
-        previewText.setText(Character.toString((char)symbol));
+        previewText.setText(generatePreview(size, Character.toString((char) symbol)));
 
         textSize.setText(String.valueOf(size));
-
 
         seekSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    previewText.setTextSize(progress + 1);
+                    previewText.setText(generatePreview(progress + DELTA, Character.toString((char) symbol)));
+                    textSize.setText(String.valueOf(progress + DELTA));
 
-                    textSize.setText(String.valueOf(progress+1));
                 }
             }
 
@@ -94,12 +91,12 @@ public class ToolSizePickerDialog extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        callbackSize.setSelectedSizeTool(seekSize.getProgress()+1);
+                        callbackSize.setSelectedSizeTool(seekSize.getProgress() + DELTA);
                         dismiss();
                     }
                 })
-               // .setNegativeButton("CANCEL", null)*/
-                .setTitle("Pick size")
+                // .setNegativeButton("CANCEL", null)*/
+                .setTitle("Pick Tool Size")
                 .create();
     }
 
@@ -119,6 +116,19 @@ public class ToolSizePickerDialog extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         callbackSize = null;
+    }
+
+    private String generatePreview(int n, String c) {
+        String result = new String();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result += c;
+            }
+            result += '\n';
+
+        }
+        return result;
+
     }
 
 }

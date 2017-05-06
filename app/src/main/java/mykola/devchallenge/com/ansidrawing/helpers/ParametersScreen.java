@@ -1,4 +1,4 @@
-package mykola.devchallenge.com.ansidrawing.models;
+package mykola.devchallenge.com.ansidrawing.helpers;
 
 /**
  * Created by mykola on 01.05.17.

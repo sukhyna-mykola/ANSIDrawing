@@ -1,10 +1,6 @@
 package mykola.devchallenge.com.ansidrawing.models;
 
-import android.graphics.Canvas;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen;
 
 /**
  * Created by mykola on 01.05.17.

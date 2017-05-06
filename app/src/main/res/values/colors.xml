@@ -3,6 +3,9 @@
     <color name="colorPrimary">#ff3F51B5</color>
     <color name="colorPrimaryDark">#ff303F9F</color>
     <color name="colorAccent">#ffFF4081</color>
+
+    <color name="transparent">#20303F9F</color>
+
     <color name="bright_pink">#ffFF007F</color>
     <color name="red">#ffFF0000</color>
     <color name="orange">#ffFF7F00</color>

@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/ten_dimen">
 
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/toolImageCheckLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true">
 
         <ImageView
             android:id="@+id/imageItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/checkItem" />
 
         <ImageView
             android:id="@+id/checkItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_check_black_24dp" />
-    </FrameLayout>
+            android:layout_centerVertical="true"
+            android:src="@drawable/check" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/textItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/ten_dimen"
         android:layout_toRightOf="@id/toolImageCheckLayout" />
 
 </RelativeLayout>

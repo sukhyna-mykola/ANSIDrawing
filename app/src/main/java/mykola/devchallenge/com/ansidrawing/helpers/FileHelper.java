@@ -37,7 +37,7 @@ public class FileHelper {
 
     public static final String X = "x";
     public static final String Y = "y";
-    public static final String SIZE = "size";
+    public static final String SIZE = "tool_size";
     public static final String COLOR = "color";
     public static final String SYMBOL = "symbol";
 

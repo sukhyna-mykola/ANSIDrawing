@@ -31,8 +31,6 @@ public class ToolPickerAdapter extends RecyclerView.Adapter<ToolPickerAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.tool_item, null);
-        float width = v.getWidth();
-        v.setMinimumHeight((int) (width / 3));
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -47,7 +45,7 @@ public class ToolPickerAdapter extends RecyclerView.Adapter<ToolPickerAdapter.Vi
         holder.textItem.setText(tool.getName());
         if (tool.getName().equals(selectedTool))
             holder.checkItem.setVisibility(View.VISIBLE);
-        else holder.checkItem.setVisibility(View.INVISIBLE);
+        else holder.checkItem.setVisibility(View.GONE);
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -22,12 +22,14 @@ import android.widget.Toast;
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackColor;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackFile;
+import mykola.devchallenge.com.ansidrawing.callbacks.CallbackPreset;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSize;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSymbol;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackTool;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.dialogs.ColorPickerDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.OpenDialog;
+import mykola.devchallenge.com.ansidrawing.dialogs.PresetPickerDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.SaveDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.SymbolSizePickerDialog;
@@ -36,15 +38,16 @@ import mykola.devchallenge.com.ansidrawing.dialogs.ToolSizePickerDialog;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 import mykola.devchallenge.com.ansidrawing.helpers.DrawHelper;
 import mykola.devchallenge.com.ansidrawing.helpers.FileHelper;
+import mykola.devchallenge.com.ansidrawing.models.Preset;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 
 import static mykola.devchallenge.com.ansidrawing.helpers.FileHelper.PERMISSION_REQUEST_CODE;
-import static mykola.devchallenge.com.ansidrawing.models.ParametersScreen.KOEF_HEIGHT;
-import static mykola.devchallenge.com.ansidrawing.models.ParametersScreen.KOEF_WIDTH;
+import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_HEIGHT;
+import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_WIDTH;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize, CallbackTool, CallbackFile {
+        View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize, CallbackTool, CallbackFile, CallbackPreset {
 
     private static final String TAG = "MainActivity";
     private static final String COLOR_PICKER_DIALOG = "color_picker_dialog";
@@ -54,18 +57,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TOOL_PICKER_DIALOG = "tool_picker_dialog";
     private static final String SAVE_DIALOG = "save_dialog";
     private static final String OPEN_DIALOG = "open_dialog";
+    private static final String PRESET_PICER_DIALOG = "preset_picker_dialog";
 
     private TextView tollSizeTextView;
     private TextView symbolSizeTextView;
     private ImageView tollTypeImage;
     private ImageView tollColorImage;
     private TextView tollSymbolTextView;
-
     private FrameLayout layers;
     private GridLayout presetLayout;
+
     private DrawHelper helper;
-    private DataHelper dataHelper;
-    private CustomTextView surfase;
 
     private Context context;
 
@@ -77,14 +79,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             float width = layers.getWidth();
 
             int symbolSize = 10;
-            int color = dataHelper.getColors()[0];
-            int symbol = dataHelper.getSymbols()[0];
+            int color = DataHelper.get(context).getColors()[0];
+            int symbol = DataHelper.get(context).getSymbols()[0];
             int toolSize = 1;
 
             helper = new DrawHelper(context, symbolSize, color, symbol, toolSize, width, height);
 
-            surfase = new CustomTextView(context, helper.getSurface(), 100);
-            layers.addView(surfase);
+            layers.addView(new CustomTextView(context, helper.getSurface()));
 
             updateViews();
 
@@ -116,8 +117,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         context = this;
-
-        dataHelper = DataHelper.get(context);
 
         tollSizeTextView = (TextView) findViewById(R.id.tool_size_text);
         tollTypeImage = (ImageView) findViewById(R.id.tool_type_image);
@@ -184,18 +183,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .show(getSupportFragmentManager(), COLOR_PICKER_DIALOG);
                 break;
             case R.id.tool_symbol_btn:
-                SymbolPickerDialog.newInstance(helper.getSizeTool())
+                SymbolPickerDialog.newInstance(helper.getSymbolTool())
                         .show(getSupportFragmentManager(), SYMBOL_PICKER_DIALOG);
 
                 break;
             case R.id.tool_type_btn:
                 ToolPickerDialog.newInstance(helper.getTool().getName())
                         .show(getSupportFragmentManager(), TOOL_PICKER_DIALOG);
+                break;
 
             case R.id.preset_btn:
-
-                helper.preparePreset(DataHelper.get(context).getPresets()[0]);
-                layers.addView(helper.getPresetView());
+                if (!helper.isActivePreset()) {
+                    PresetPickerDialog.newInstance().show(getSupportFragmentManager(), PRESET_PICER_DIALOG);
+                }
                 break;
             case R.id.presetCancel:
                 layers.removeView(helper.getPresetView());
@@ -219,8 +219,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private int oldX, oldY;
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
@@ -235,19 +233,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 float x = event.getX();
                 float y = event.getY();
+
                 int convertY = (int) (y / KOEF_HEIGHT);
                 int convertX = (int) (x / KOEF_WIDTH);
-                if (oldX != convertX || oldY != convertY) {
-                    oldX = convertX;
-                    oldY = convertY;
 
-                    if (helper.isActivePreset())
-                        helper.move(convertX, convertY);
-                    else
-                        helper.draw(convertX, convertY);
-                    return true;
-                }
-                return false;
+                if (helper.isActivePreset())
+                    helper.move(convertX, convertY);
+                else
+                    helper.draw(convertX, convertY);
+                return true;
+
             case MotionEvent.ACTION_UP:
                 if (helper.isActivePreset()) ;
                 else
@@ -266,8 +261,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < count; i++) {
             View v = layers.getChildAt(i);
             v.invalidate();
-
-
         }
 
     }
@@ -313,6 +306,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setSelectedTool(Tool tool) {
         helper.prepareTool(tool);
         tollTypeImage.setImageResource(tool.getImage());
+    }
+
+    @Override
+    public void setSelectedPreset(Preset preset) {
+        helper.preparePreset(preset);
+        layers.addView(helper.getPresetView());
     }
 
     @Override

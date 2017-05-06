@@ -26,7 +26,7 @@ import static mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog.SEL
 public class SymbolSizePickerDialog extends DialogFragment {
 
     public static final String SELECTED_SIZE = "selected_size";
-
+    private static final int DELTA  = 5;
 
     private CallbackSize callbackSize;
 
@@ -55,10 +55,10 @@ public class SymbolSizePickerDialog extends DialogFragment {
         textSize  = (TextView) v.findViewById(R.id.textSize);
         previewText = (TextView) v.findViewById(R.id.previewSize);
 
-        int size = getArguments().getInt(SELECTED_SIZE)-5;
+        int size = getArguments().getInt(SELECTED_SIZE);
         int symbol =  getArguments().getInt(SELECTED_SYMBOL);
 
-        seekSize.setProgress(size);
+        seekSize.setProgress(size-DELTA);
         seekSize.setMax(45);
 
         previewText.setTextSize(size);
@@ -71,8 +71,8 @@ public class SymbolSizePickerDialog extends DialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    previewText.setTextSize(progress + 5);
-                    textSize.setText(String.valueOf(progress+5));
+                    previewText.setTextSize(progress + DELTA);
+                    textSize.setText(String.valueOf(progress+DELTA));
                 }
             }
 
@@ -93,12 +93,12 @@ public class SymbolSizePickerDialog extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        callbackSize.setSelectedSizeSymbol(seekSize.getProgress()+5);
+                        callbackSize.setSelectedSizeSymbol(seekSize.getProgress()+DELTA);
                         dismiss();
                     }
                 })
-               // .setNegativeButton("CANCEL", null)*/
-                .setTitle("Pick size")
+
+                .setTitle("Pick Tool size")
                 .create();
     }
 

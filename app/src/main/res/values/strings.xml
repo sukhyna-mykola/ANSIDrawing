@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ANSIDrawing</string>
+    <string name="triangle">Triangle</string>
+    <string name="rectangle">Rectangle</string>
+    <string name="plus">Plus</string>
+    <string name="cross">Cross</string>
 </resources>

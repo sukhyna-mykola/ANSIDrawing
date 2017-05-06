@@ -2,11 +2,9 @@ package mykola.devchallenge.com.ansidrawing.helpers;
 
 import android.content.Context;
 
-import mykola.devchallenge.com.ansidrawing.models.ParametersScreen;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Preset;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
-import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 
 /**
@@ -22,7 +20,6 @@ public class PresetHelper {
     public static final int SCALE_MAX = 4;
 
     private CustomTextView presetView;
-    private Tool tool;
     public static boolean isActive;
     private Surface presetSurface;
     private Pixel[][] modifiedPixels;
@@ -36,15 +33,17 @@ public class PresetHelper {
     }
 
     public PresetHelper(Preset preset, ParametersScreen screen, Context context) {
-        modifiedPixels = preset.getPixels();
-        tool = preset.getTool();
-        presetSurface = new Surface(screen);
-        presetView = new CustomTextView(context, presetSurface, CustomTextView.PRESET_ID);
 
-
-        this.x = this.y = 30;
         isActive = true;
-        draw();
+
+        modifiedPixels = preset.getPixels();
+        presetSurface = new Surface(screen);
+        presetView = new CustomTextView(context, presetSurface);
+
+        this.x = screen.getSCALE_WIDTH()/2;
+        this.y = screen.getSCALE_HEIGHT()/2;
+
+        scalePlus();
 
     }
 
@@ -53,7 +52,6 @@ public class PresetHelper {
     }
 
     public void draw() {
-
 
         presetSurface.clear();
 
@@ -227,8 +225,8 @@ public class PresetHelper {
             for (int j = 0; j < modifiedPixels[0].length; j++) {
                 Pixel p = modifiedPixels[i][j];
                 if (p != null) {
-                    p.setX(i + x);
-                    p.setY(j + y);
+                    p.setX(i + x - modifiedPixels.length / 2);
+                    p.setY(j + y - modifiedPixels[0].length / 2);
                 }
             }
 
