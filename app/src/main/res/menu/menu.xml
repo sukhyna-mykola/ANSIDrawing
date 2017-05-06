@@ -12,11 +12,11 @@
         android:title="REDO"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_import"
-        android:title="IMPORT"
+        android:id="@+id/action_open"
+        android:title="OPEN"
         />
     <item
-        android:id="@+id/action_export"
-        android:title="EXPORT"
+        android:id="@+id/action_save"
+        android:title="SAVE"
         />
 </menu>

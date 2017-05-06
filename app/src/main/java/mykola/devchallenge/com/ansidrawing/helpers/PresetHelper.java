@@ -16,8 +16,6 @@ import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 public class PresetHelper {
 
     public static final int D90 = 1;
-    public static final int D180 = 2;
-    public static final int D270 = 3;
     public static final int D360 = 4;
 
     public static final int SCALE_MIN = 0;
@@ -25,12 +23,17 @@ public class PresetHelper {
 
     private CustomTextView presetView;
     private Tool tool;
+    public static boolean isActive;
     private Surface presetSurface;
     private Pixel[][] modifiedPixels;
 
     private int degress;
     private int scale;
     private int x, y;
+
+    public Surface getPresetSurface() {
+        return presetSurface;
+    }
 
     public PresetHelper(Preset preset, ParametersScreen screen, Context context) {
         modifiedPixels = preset.getPixels();
@@ -40,6 +43,7 @@ public class PresetHelper {
 
 
         this.x = this.y = 30;
+        isActive = true;
         draw();
 
     }

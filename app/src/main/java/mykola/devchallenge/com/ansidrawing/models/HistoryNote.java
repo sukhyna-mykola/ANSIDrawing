@@ -7,12 +7,6 @@ package mykola.devchallenge.com.ansidrawing.models;
 public class HistoryNote {
     private String action;
     private Surface surface;
-    // private ChangedPixels changedPixels;
-
-    public HistoryNote(String action) {
-        this.action = action;
-        //changedPixels = new ChangedPixels();
-    }
 
 
     public String getAction() {
@@ -23,21 +17,6 @@ public class HistoryNote {
         this.action = action;
     }
 
-
-    public HistoryNote(String action, ChangedPixels changedPixels) {
-        this.action = action;
-        //  this.changedPixels = changedPixels;
-    }
-
-
-   /* public ChangedPixels getChangedPixels() {
-        return changedPixels;
-    }
-
-    public void addChanged(ChangedPixels changedPixels) {
-        this.changedPixels.addNewPixels(changedPixels.getNewPixels());
-        this.changedPixels.addOldPixels(changedPixels.getOldPixels());
-    }*/
 
     public Surface getSurface() {
         return surface;

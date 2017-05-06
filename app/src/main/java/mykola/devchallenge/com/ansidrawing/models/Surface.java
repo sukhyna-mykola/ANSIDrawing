@@ -1,5 +1,11 @@
 package mykola.devchallenge.com.ansidrawing.models;
 
+import android.graphics.Canvas;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by mykola on 01.05.17.
  */
@@ -7,6 +13,10 @@ package mykola.devchallenge.com.ansidrawing.models;
 public class Surface {
     private Pixel[][] pixels;
     private int width, height;
+
+    public Pixel[][] getPixels() {
+        return pixels;
+    }
 
     public int getWidth() {
         return width;
@@ -66,5 +76,9 @@ public class Surface {
         }
         return new Surface(newPixels);
     }
+
+
+
+
 
 }

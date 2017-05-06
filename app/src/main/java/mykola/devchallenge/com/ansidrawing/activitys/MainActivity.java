@@ -1,9 +1,12 @@
 package mykola.devchallenge.com.ansidrawing.activitys;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,28 +17,34 @@ import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackColor;
+import mykola.devchallenge.com.ansidrawing.callbacks.CallbackFile;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSize;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSymbol;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackTool;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.dialogs.ColorPickerDialog;
+import mykola.devchallenge.com.ansidrawing.dialogs.OpenDialog;
+import mykola.devchallenge.com.ansidrawing.dialogs.SaveDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.SymbolSizePickerDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.ToolPickerDialog;
 import mykola.devchallenge.com.ansidrawing.dialogs.ToolSizePickerDialog;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 import mykola.devchallenge.com.ansidrawing.helpers.DrawHelper;
+import mykola.devchallenge.com.ansidrawing.helpers.FileHelper;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 
+import static mykola.devchallenge.com.ansidrawing.helpers.FileHelper.PERMISSION_REQUEST_CODE;
 import static mykola.devchallenge.com.ansidrawing.models.ParametersScreen.KOEF_HEIGHT;
 import static mykola.devchallenge.com.ansidrawing.models.ParametersScreen.KOEF_WIDTH;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize, CallbackTool {
+        View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize, CallbackTool, CallbackFile {
 
     private static final String TAG = "MainActivity";
     private static final String COLOR_PICKER_DIALOG = "color_picker_dialog";
@@ -43,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TOOL_SIZE_PICKER_DIALOG = "tool_size_picker_dialog";
     private static final String SYMBOL_SIZE_PICKER_DIALOG = "symbol_size_picker_dialog";
     private static final String TOOL_PICKER_DIALOG = "tool_picker_dialog";
+    private static final String SAVE_DIALOG = "save_dialog";
+    private static final String OPEN_DIALOG = "open_dialog";
 
     private TextView tollSizeTextView;
     private TextView symbolSizeTextView;
@@ -52,9 +63,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FrameLayout layers;
     private GridLayout presetLayout;
-    private CustomTextView canvas;
     private DrawHelper helper;
     private DataHelper dataHelper;
+    private CustomTextView surfase;
 
     private Context context;
 
@@ -72,9 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             helper = new DrawHelper(context, symbolSize, color, symbol, toolSize, width, height);
 
-            canvas = new CustomTextView(context, helper.activeSurface, layers.getChildCount());
-
-            layers.addView(canvas);
+            surfase = new CustomTextView(context, helper.getSurface(), 100);
+            layers.addView(surfase);
 
             updateViews();
 
@@ -82,6 +92,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 2) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(context, permissions[0], Toast.LENGTH_SHORT).show();
+                //showExtDirFilesCount();
+            }
+            if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(context, permissions[1], Toast.LENGTH_SHORT).show();
+                // showUnreadSmsCount();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
 
     @Override
@@ -125,9 +151,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.action_redo:
                 helper.redo();
                 return true;
-            case R.id.action_import:
+            case R.id.action_open:
+                if (FileHelper.getInstance(this).checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE))
+                    OpenDialog.newInstance().show(getSupportFragmentManager(), OPEN_DIALOG);
+                else FileHelper.getInstance(this).requestMultiplePermissions();
+
                 return true;
-            case R.id.action_export:
+            case R.id.action_save:
+                if (FileHelper.getInstance(this).checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    SaveDialog.newInstance().show(getSupportFragmentManager(), SAVE_DIALOG);
+                else FileHelper.getInstance(this).requestMultiplePermissions();
                 return true;
 
         }
@@ -160,13 +193,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .show(getSupportFragmentManager(), TOOL_PICKER_DIALOG);
 
             case R.id.preset_btn:
-                presetLayout.setVisibility(View.VISIBLE);
-                layers.addView(helper.preparePreset(DataHelper.get(context).getPresets()[0]));
-                 canvas.setVisibility(View.INVISIBLE);
+
+                helper.preparePreset(DataHelper.get(context).getPresets()[0]);
+                layers.addView(helper.getPresetView());
                 break;
             case R.id.presetCancel:
+                layers.removeView(helper.getPresetView());
+                helper.presetCancel();
                 break;
             case R.id.presetConfirm:
+                layers.removeView(helper.getPresetView());
+                helper.presetConfirm();
                 break;
             case R.id.presetScaleMinus:
                 helper.presetScaleMinus();
@@ -190,7 +227,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                helper.newHistoryNote();
+                if (helper.isActivePreset()) ;
+                else
+                    helper.newHistoryNote();
                 return true;
             case MotionEvent.ACTION_MOVE:
 
@@ -202,16 +241,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     oldX = convertX;
                     oldY = convertY;
 
-                    helper.draw(convertX, convertY);
-                    if (canvas.getVisibility() == View.INVISIBLE)
+                    if (helper.isActivePreset())
                         helper.move(convertX, convertY);
                     else
-
-                        return true;
+                        helper.draw(convertX, convertY);
+                    return true;
                 }
                 return false;
             case MotionEvent.ACTION_UP:
-                helper.endHistoryNote();
+                if (helper.isActivePreset()) ;
+                else
+                    helper.endHistoryNote();
                 return true;
             default:
                 return false;
@@ -222,7 +262,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void updateCanvas() {
-        canvas.invalidate();
+        int count = layers.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View v = layers.getChildAt(i);
+            v.invalidate();
+
+
+        }
+
     }
 
     @Override
@@ -232,6 +279,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tollSymbolTextView.setText(Character.toString((char) helper.getSymbolTool()));
         tollTypeImage.setImageResource(helper.getTool().getImage());
         tollColorImage.setBackgroundColor(helper.getColorTool());
+
+        if (helper.isActivePreset()) {
+            presetLayout.setVisibility(View.VISIBLE);
+        } else presetLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -262,5 +313,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setSelectedTool(Tool tool) {
         helper.prepareTool(tool);
         tollTypeImage.setImageResource(tool.getImage());
+    }
+
+    @Override
+    public void save(String fileName) {
+        helper.save(fileName);
+    }
+
+    @Override
+    public void load(String fileName) {
+        helper.load(fileName);
     }
 }

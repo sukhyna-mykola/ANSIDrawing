@@ -2,8 +2,7 @@ package mykola.devchallenge.com.ansidrawing.helpers;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONException;
 
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
@@ -20,48 +19,48 @@ import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
  */
 
 public class DrawHelper {
-    private List<Surface> surfaceList;
-    private int activeCanvaspPosition;
-    public Surface activeSurface;
+
     private HistoryNote activeNote;
     private Tool tool;
 
     private PresetHelper presetHelper;
+    private FileHelper fileHelper;
     private ParametersTool parametersTool;
     private ParametersScreen parametersScreen;
     private CallbackUpdate updator;
     private Context context;
 
+    private Surface surface;
+
     private StringBuilder s = new StringBuilder();
     ;
 
 
+    public Surface getSurface() {
+        return surface;
+    }
+
     public DrawHelper(Context c, int sizeSymbol, int color, int symbol, int sizeTool, float width, float height) {
         this.context = c;
         updator = (CallbackUpdate) c;
+
         parametersTool = new ParametersTool(sizeSymbol, color, symbol, sizeTool);
         parametersScreen = new ParametersScreen(width, height);
 
+        fileHelper = FileHelper.getInstance(context);
+
         tool = new PencilTool(parametersTool);
 
-        surfaceList = new ArrayList<>();
+        surface = new Surface(parametersScreen);
 
-        activeSurface = new Surface(parametersScreen);
-        activeNote = new HistoryNote("INIT", activeSurface);
+        activeNote = new HistoryNote("INIT", surface);
+
         HistoryHelper.get().addNote(activeNote.clone());
-
-
-        surfaceList.add(activeSurface);
-
-
-        for (int i = 0; i < parametersScreen.getSCALE_HEIGHT() * parametersScreen.getSCALE_WIDTH(); i++) {
-            s.append(" ");
-        }
 
     }
 
     public void newHistoryNote() {
-        activeNote = new HistoryNote(tool.getName(), activeSurface);
+        activeNote = new HistoryNote(tool.getName(), surface);
     }
 
     public void endHistoryNote() {
@@ -69,22 +68,21 @@ public class DrawHelper {
     }
 
     public void undo() {
-        HistoryHelper.get().undo(getActiveSurface());
+        HistoryHelper.get().undo(surface);
         updator.updateCanvas();
     }
 
     public void redo() {
-        HistoryHelper.get().redo(getActiveSurface());
+        HistoryHelper.get().redo(surface);
         updator.updateCanvas();
     }
 
     public void draw(float x, float y) {
 
-
-        tool.draw((int) x, (int) y, getActiveSurface());
-
+        tool.draw((int) x, (int) y, surface);
         updator.updateCanvas();
     }
+
 
     public Tool getTool() {
         return tool;
@@ -132,20 +130,52 @@ public class DrawHelper {
     }
 
 
-    private Surface getActiveSurface() {
-        try {
-            activeSurface = surfaceList.get(activeCanvaspPosition);
+    public void preparePreset(Preset preset) {
+        presetHelper = new PresetHelper(preset, parametersScreen, context);
 
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-            activeSurface = null;
-        }
-        return activeSurface;
+        updator.updateViews();
+        updator.updateCanvas();
     }
 
-    public CustomTextView preparePreset(Preset preset) {
-        presetHelper = new PresetHelper(preset, parametersScreen, context);
-        return presetHelper.getPresetView();
+    public void presetConfirm() {
+
+        Surface presetSurface = presetHelper.getPresetSurface();
+        for (int i = 0; i < presetSurface.getWidth(); i++) {
+            for (int j = 0; j < presetSurface.getHeight(); j++) {
+                if (presetSurface.getPixel(i, j) != null && surface.getPixel(i, j) == null)
+                    surface.setPixel(i, j, presetSurface.getPixel(i, j));
+            }
+
+        }
+
+        activeNote = new HistoryNote("PRESET", surface);
+
+        HistoryHelper.get().addNote(activeNote.clone());
+
+        presetHelper.isActive = false;
+
+        updator.updateViews();
+        updator.updateCanvas();
+
+    }
+
+
+    public CustomTextView getPresetView() {
+        if (presetHelper != null)
+            return presetHelper.getPresetView();
+        else return null;
+    }
+
+    public boolean isActivePreset() {
+        return presetHelper.isActive;
+    }
+
+    public void presetCancel() {
+        presetHelper.isActive = false;
+
+        updator.updateViews();
+        updator.updateCanvas();
+
     }
 
     public void presetRotate() {
@@ -166,5 +196,33 @@ public class DrawHelper {
     public void move(int x, int y) {
         presetHelper.move(x, y);
 
+    }
+
+
+    public void save(String fileName) {
+        try {
+            fileHelper.save(surface, fileName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    public void load(String s) {
+        try {
+            Surface loaded = fileHelper.load(s);
+            for (int i = 0; i < surface.getWidth(); i++) {
+                for (int j = 0; j < surface.getHeight(); j++) {
+                    surface.setPixel(i, j, loaded.getPixel(i, j));
+                }
+
+            }
+            activeNote = new HistoryNote("IMPORT", surface);
+
+            HistoryHelper.get().addNote(activeNote.clone());
+            updator.updateCanvas();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

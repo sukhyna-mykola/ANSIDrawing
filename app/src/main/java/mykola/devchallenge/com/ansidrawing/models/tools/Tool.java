@@ -1,7 +1,7 @@
 package mykola.devchallenge.com.ansidrawing.models.tools;
 
+import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
-import mykola.devchallenge.com.ansidrawing.models.ChangedPixels;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 
 /**
@@ -56,5 +56,5 @@ public abstract class Tool {
         this.parametersTool = parametersTool;
     }
 
-    public abstract ChangedPixels draw(int x, int y, Surface surface);
+    public abstract Pixel draw(int x, int y, Surface surface);
 }

@@ -41,5 +41,4 @@ public class Pixel extends ParametersTool {
         return new Pixel(sizeSymbol, color, symbol, x, y);
     }
 
-
 }
