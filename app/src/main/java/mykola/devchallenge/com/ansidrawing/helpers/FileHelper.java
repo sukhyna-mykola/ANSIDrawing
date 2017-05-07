@@ -43,7 +43,9 @@ public class FileHelper {
 
     private static final String DIR = "ANSI";
     public static final String TXT = ".txt";
-    public static final int PERMISSION_REQUEST_CODE = 14;
+
+    public static final int PERMISSION_REQUEST_CODE_WRITE = 14;
+    public static final int PERMISSION_REQUEST_CODE_READ = 15;
 
 
     private static FileHelper fileHelper;
@@ -84,15 +86,22 @@ public class FileHelper {
     }
 
 
-    public void requestMultiplePermissions() {
+    public void requestReadPermissions() {
         ActivityCompat.requestPermissions((Activity) context,
                 new String[]{
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+
                 },
-                PERMISSION_REQUEST_CODE);
+                PERMISSION_REQUEST_CODE_READ);
     }
 
+    public void requestWritePermissions() {
+        ActivityCompat.requestPermissions((Activity) context,
+                new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                },
+                PERMISSION_REQUEST_CODE_WRITE);
+    }
 
     public Surface load(String fileName) throws JSONException {
         String data = readFileSD(fileName);
@@ -138,7 +147,7 @@ public class FileHelper {
         File sdFile = new File(sdPath, fileName);
         try {
             BufferedReader br = new BufferedReader(new FileReader(sdFile));
-            String str = "";
+            String str;
             String result = new String();
 
             while ((str = br.readLine()) != null) {
@@ -188,6 +197,7 @@ public class FileHelper {
     private Surface surfaceFromJson(JSONObject o) throws JSONException {
         int width = o.getInt(WIDTH);
         int height = o.getInt(HEIGHT);
+
         Pixel[][] pixels = new Pixel[width][height];
 
         JSONArray a = o.getJSONArray(PIXELS);
@@ -197,6 +207,8 @@ public class FileHelper {
             Pixel p = pixelFromJson(object);
 
             pixels[p.getX()][p.getY()] = p;
+
+
         }
         return new Surface(pixels);
 

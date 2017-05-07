@@ -1,19 +1,22 @@
 package mykola.devchallenge.com.ansidrawing.helpers;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
+import mykola.devchallenge.com.ansidrawing.callbacks.CallbackCrop;
+import mykola.devchallenge.com.ansidrawing.callbacks.CallbackPreset;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackUpdate;
 import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
+import mykola.devchallenge.com.ansidrawing.models.Point;
 import mykola.devchallenge.com.ansidrawing.models.Preset;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.models.tools.ColorizeTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
-import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 
 /**
  * Created by mykola on 01.05.17.
@@ -26,11 +29,14 @@ public class DrawHelper {
 
     private PresetHelper presetHelper;
     private FileHelper fileHelper;
+    private CropHelper cropHelper;
 
     private ParametersTool parametersTool;
     private ParametersScreen parametersScreen;
 
     private CallbackUpdate updator;
+    private CallbackPreset callbackPreset;
+    private CallbackCrop callbackCrop;
 
     private Context context;
 
@@ -45,7 +51,12 @@ public class DrawHelper {
 
     public DrawHelper(Context c, int sizeSymbol, int color, int symbol, int sizeTool, float width, float height) {
         this.context = c;
+
+
         updator = (CallbackUpdate) c;
+        callbackCrop = (CallbackCrop) c;
+        callbackPreset = (CallbackPreset) c;
+
 
         parametersTool = new ParametersTool(sizeSymbol, color, symbol, sizeTool);
         parametersScreen = new ParametersScreen(width, height);
@@ -144,10 +155,7 @@ public class DrawHelper {
 
 
     public void preparePreset(Preset preset) {
-        presetHelper = new PresetHelper(preset, parametersScreen, context);
-
-        updator.updateViews();
-        updator.updateCanvas();
+        presetHelper = new PresetHelper(preset, parametersScreen);
     }
 
 
@@ -164,41 +172,17 @@ public class DrawHelper {
 
         HistoryHelper.get().addNote(activeNote.clone());
 
-        presetHelper.isActive = false;
-
-        updator.updateViews();
+        presetHelper = null;
+        callbackPreset.confirmPreset();
         updator.updateCanvas();
-    }
 
-
-    public CustomTextView getPresetView() {
-        if (presetHelper != null)
-            return presetHelper.getPresetView();
-        else return null;
-    }
-
-    public boolean isActivePreset() {
-        return presetHelper.isActive;
     }
 
     public void presetCancel() {
-        presetHelper.isActive = false;
-
-        updator.updateViews();
-        updator.updateCanvas();
+        presetHelper = null;
+        callbackPreset.cancelPreset();
     }
 
-    public void presetRotate() {
-        presetHelper.rotate();
-    }
-
-    public void presetScalePlus() {
-        presetHelper.scalePlus();
-    }
-
-    public void presetScaleMinus() {
-        presetHelper.scaleMinus();
-    }
 
     public void move(int x, int y) {
         if (oldX != x || oldY != x) {
@@ -222,20 +206,55 @@ public class DrawHelper {
 
     public void load(String s) {
         try {
-            Surface loaded = fileHelper.load(s);
+            surface = fileHelper.load(s);
 
-            for (int i = 0; i < surface.getWidth(); i++) {
-                for (int j = 0; j < surface.getHeight(); j++) {
-                    surface.setPixel(i, j, loaded.getPixel(i, j));
-                }
+            ParametersScreen.SCALE_HEIGHT = surface.getHeight();
+            ParametersScreen.SCALE_WIDTH = surface.getWidth();
 
-            }
             activeNote = new HistoryNote("OPEN", surface);
 
             HistoryHelper.get().addNote(activeNote.clone());
             updator.updateCanvas();
+
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public CropHelper getCropHelper() {
+        return cropHelper;
+    }
+
+
+    public void prepareCrop() {
+        cropHelper = new CropHelper(new Point(1, 1), new Point(surface.getWidth() - 1, surface.getHeight() - 1));
+    }
+
+    public void confirmCrop() {
+        surface = cropHelper.crop(surface);
+        cropHelper = null;
+
+        callbackCrop.confirmCrop();
+    }
+
+    public void cancelCrop() {
+
+        cropHelper = null;
+        callbackCrop.cancelCrop();
+    }
+
+
+    public PresetHelper getPresetHelper() {
+        return presetHelper;
+    }
+
+    public boolean isActivePreset() {
+        return presetHelper != null;
+    }
+
+
+    public boolean isActiveCrop() {
+        return cropHelper != null;
     }
 }

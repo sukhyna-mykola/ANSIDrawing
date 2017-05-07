@@ -3,7 +3,8 @@ package mykola.devchallenge.com.ansidrawing.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen;
@@ -20,9 +21,7 @@ public class CustomTextView extends TextView {
     public CustomTextView(Context context, Surface surface) {
         super(context);
         this.surface = surface;
-
-        setOnTouchListener((OnTouchListener) context);
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        resizeScreen();
     }
 
     @Override
@@ -32,12 +31,22 @@ public class CustomTextView extends TextView {
 
     public void setSurface(Surface surface) {
         this.surface = surface;
+        resizeScreen();
     }
+
+
+    public void resizeScreen() {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(surface.getWidth() * (ParametersScreen.KOEF_WIDTH), surface.getHeight() * (ParametersScreen.KOEF_HEIGHT));
+        setLayoutParams(params);
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawRect(1,1,getWidth(),getHeight(),paint);
+
         for (int i = 0; i < ParametersScreen.SCALE_WIDTH; i++) {
             for (int j = 0; j < ParametersScreen.SCALE_HEIGHT; j++) {
                 Pixel p = surface.getPixel(i, j);

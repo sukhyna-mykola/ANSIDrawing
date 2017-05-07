@@ -64,6 +64,7 @@ public class SymbolSizePickerDialog extends DialogFragment {
         previewText.setTextSize(size);
         previewText.setText(Character.toString((char)symbol));
 
+
         textSize.setText(String.valueOf(size));
 
 

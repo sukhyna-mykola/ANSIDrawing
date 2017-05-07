@@ -57,13 +57,13 @@ public class ToolSizePickerDialog extends DialogFragment {
         int size = getArguments().getInt(SELECTED_SIZE);
         final int symbol = getArguments().getInt(SELECTED_SYMBOL);
 
-        seekSize.setProgress(size - DELTA);
-        seekSize.setMax(9);
-
+        previewText.setLineSpacing(0,0.6f);
         previewText.setText(generatePreview(size, Character.toString((char) symbol)));
 
         textSize.setText(String.valueOf(size));
 
+        seekSize.setProgress(size - DELTA);
+        seekSize.setMax(9);
         seekSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

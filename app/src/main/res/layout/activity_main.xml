@@ -6,76 +6,15 @@
     android:layout_height="match_parent"
     tools:context="mykola.devchallenge.com.ansidrawing.activitys.MainActivity">
 
-    <FrameLayout
+
+    <RelativeLayout
         android:id="@+id/layers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_menu_layout"
         android:layout_margin="@dimen/five_dimen"
-        android:animateLayoutChanges="true" />
-
-    <GridLayout
-        android:id="@+id/presetLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:orientation="horizontal"
-        android:padding="@dimen/five_dimen">
-
-        <ImageButton
-            android:id="@+id/presetScaleMinus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/five_dimen"
-            android:background="@drawable/menu_button_selector"
-            android:onClick="onClick"
-            android:padding="@dimen/five_dimen"
-            android:src="@drawable/zoom_minus" />
-
-        <ImageButton
-            android:id="@+id/presetScalePlus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/five_dimen"
-            android:background="@drawable/menu_button_selector"
-            android:onClick="onClick"
-            android:padding="@dimen/five_dimen"
-            android:src="@drawable/zoom_plus" />
-
-        <ImageButton
-            android:id="@+id/presetRotate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/five_dimen"
-            android:background="@drawable/menu_button_selector"
-            android:onClick="onClick"
-            android:padding="@dimen/five_dimen"
-            android:src="@drawable/rotate" />
-
-        <android.support.v4.widget.Space android:layout_gravity="fill_horizontal" />
-
-        <ImageButton
-            android:id="@+id/presetConfirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/five_dimen"
-            android:background="@drawable/menu_button_selector"
-            android:onClick="onClick"
-            android:padding="@dimen/five_dimen"
-            android:src="@drawable/check" />
-
-        <ImageButton
-            android:id="@+id/presetCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/five_dimen"
-            android:background="@drawable/menu_button_selector"
-            android:onClick="onClick"
-            android:padding="@dimen/five_dimen"
-            android:src="@drawable/cancel" />
-
-
-    </GridLayout>
+        android:animateLayoutChanges="true"
+        android:gravity="center" />
 
 
     <HorizontalScrollView
@@ -84,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/transparent"
-        android:padding="16dp">
+        android:padding="@dimen/ten_dimen">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -228,6 +167,29 @@
                     android:minHeight="@dimen/bottom_menu_dimen"
                     android:minWidth="@dimen/bottom_menu_dimen"
                     android:src="@drawable/preset" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/resize_btn"
+                style="@style/BottomMenuItemStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CROP" />
+
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:minHeight="@dimen/bottom_menu_dimen"
+                    android:minWidth="@dimen/bottom_menu_dimen"
+                    android:src="@drawable/crop" />
 
             </LinearLayout>
 

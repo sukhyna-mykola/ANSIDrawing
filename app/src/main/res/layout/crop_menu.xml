@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/crop_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="horizontal"
+    android:padding="@dimen/five_dimen">
+
+    <android.support.v4.widget.Space android:layout_gravity="fill_horizontal" />
+
+    <ImageButton
+        android:id="@+id/crop_conform"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/five_dimen"
+        android:background="@drawable/menu_button_selector"
+        android:onClick="onClick"
+        android:padding="@dimen/five_dimen"
+        android:src="@drawable/check" />
+
+    <ImageButton
+        android:id="@+id/crop_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/five_dimen"
+        android:background="@drawable/menu_button_selector"
+        android:onClick="onClick"
+        android:padding="@dimen/five_dimen"
+        android:src="@drawable/cancel" />
+
+
+</GridLayout>

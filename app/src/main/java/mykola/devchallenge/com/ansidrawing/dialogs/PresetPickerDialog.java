@@ -81,5 +81,15 @@ public class PresetPickerDialog extends DialogFragment implements CallbackPreset
         dismiss();
     }
 
+    @Override
+    public void confirmPreset() {
+
+    }
+
+    @Override
+    public void cancelPreset() {
+
+    }
+
 
 }

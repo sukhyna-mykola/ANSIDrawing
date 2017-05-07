@@ -19,10 +19,9 @@ public class PresetHelper {
     public static final int SCALE_MIN = 0;
     public static final int SCALE_MAX = 4;
 
-    private CustomTextView presetView;
-    public static boolean isActive;
     private Surface presetSurface;
-    private Pixel[][] modifiedPixels;
+
+    private Preset preset;
 
     private int degress;
     private int scale;
@@ -32,43 +31,16 @@ public class PresetHelper {
         return presetSurface;
     }
 
-    public PresetHelper(Preset preset, ParametersScreen screen, Context context) {
+    public PresetHelper(Preset preset, ParametersScreen screen) {
 
-        isActive = true;
+        this.preset = preset.clone();
 
-        modifiedPixels = preset.getPixels();
         presetSurface = new Surface(screen);
-        presetView = new CustomTextView(context, presetSurface);
 
-        this.x = screen.getSCALE_WIDTH()/2;
-        this.y = screen.getSCALE_HEIGHT()/2;
+        this.x = screen.getSCALE_WIDTH() / 2;
+        this.y = screen.getSCALE_HEIGHT() / 2;
 
         scalePlus();
-
-    }
-
-    public CustomTextView getPresetView() {
-        return presetView;
-    }
-
-    public void draw() {
-
-        presetSurface.clear();
-
-        normalizeCoordinates(x, y);
-
-        for (int i = 0; i < modifiedPixels.length; i++) {
-            for (int j = 0; j < modifiedPixels[0].length; j++) {
-                Pixel p = modifiedPixels[i][j];
-                if (p != null) {
-                    presetSurface.setPixel(p.getX(), p.getY(), p);
-                }
-
-            }
-
-        }
-
-        presetView.invalidate();
 
     }
 
@@ -87,7 +59,7 @@ public class PresetHelper {
         if (degress > D360) ;
         degress = D90;
 
-        modifiedPixels = rotateByDegrees(modifiedPixels, degress);
+        preset.setPixels(rotateByDegrees(preset.getPixels(), degress));
 
         draw();
 
@@ -97,7 +69,7 @@ public class PresetHelper {
     public void scalePlus() {
         this.scale++;
         if (this.scale <= SCALE_MAX)
-            modifiedPixels = addPixelsScale(modifiedPixels);
+            preset.setPixels(addPixelsScale(preset.getPixels()));
         else this.scale = SCALE_MAX;
 
         draw();
@@ -109,11 +81,18 @@ public class PresetHelper {
         this.scale--;
 
         if (this.scale >= SCALE_MIN)
-            modifiedPixels = removePixelsScale(modifiedPixels);
+            preset.setPixels(removePixelsScale(preset.getPixels()));
         else this.scale = SCALE_MIN;
 
         draw();
 
+
+    }
+
+    private void draw() {
+
+        normalizeCoordinates(x, y);
+        preset.draw(x, y, presetSurface);
 
     }
 
@@ -221,12 +200,13 @@ public class PresetHelper {
     }
 
     private void normalizeCoordinates(int x, int y) {
-        for (int i = 0; i < modifiedPixels.length; i++) {
-            for (int j = 0; j < modifiedPixels[0].length; j++) {
-                Pixel p = modifiedPixels[i][j];
+
+        for (int i = 0; i < preset.getPixels().length; i++) {
+            for (int j = 0; j < preset.getPixels()[0].length; j++) {
+                Pixel p = preset.getPixels()[i][j];
                 if (p != null) {
-                    p.setX(i + x - modifiedPixels.length / 2);
-                    p.setY(j + y - modifiedPixels[0].length / 2);
+                    p.setX(i + x - preset.getPixels().length / 2);
+                    p.setY(j + y - preset.getPixels()[0].length / 2);
                 }
             }
 
@@ -257,7 +237,6 @@ public class PresetHelper {
         for (int i = 0; i < pixels.length; i++) {
             for (int j = 0; j < pixels[0].length; j++)
                 result[i][j] = pixels[pixels.length - i - 1][j];
-
 
         }
 

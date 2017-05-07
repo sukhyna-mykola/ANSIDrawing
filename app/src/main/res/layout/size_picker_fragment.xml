@@ -8,9 +8,7 @@
         android:id="@+id/previewSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/ten_dimen"
-        android:lineSpacingMultiplier="0.6" />
+        android:layout_gravity="center" />
 
     <SeekBar
         android:id="@+id/seekSize"

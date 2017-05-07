@@ -13,14 +13,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackColor;
+import mykola.devchallenge.com.ansidrawing.callbacks.CallbackCrop;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackFile;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackPreset;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSize;
@@ -40,14 +40,18 @@ import mykola.devchallenge.com.ansidrawing.helpers.DrawHelper;
 import mykola.devchallenge.com.ansidrawing.helpers.FileHelper;
 import mykola.devchallenge.com.ansidrawing.models.Preset;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
+import mykola.devchallenge.com.ansidrawing.views.CropView;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
+import mykola.devchallenge.com.ansidrawing.views.PresetView;
 
-import static mykola.devchallenge.com.ansidrawing.helpers.FileHelper.PERMISSION_REQUEST_CODE;
+import static mykola.devchallenge.com.ansidrawing.helpers.FileHelper.PERMISSION_REQUEST_CODE_READ;
+import static mykola.devchallenge.com.ansidrawing.helpers.FileHelper.PERMISSION_REQUEST_CODE_WRITE;
 import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_HEIGHT;
 import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_WIDTH;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize, CallbackTool, CallbackFile, CallbackPreset {
+        View.OnTouchListener, CallbackUpdate, CallbackColor, CallbackSymbol, CallbackSize,
+        CallbackCrop, CallbackTool, CallbackFile, CallbackPreset {
 
     private static final String TAG = "MainActivity";
     private static final String COLOR_PICKER_DIALOG = "color_picker_dialog";
@@ -64,12 +68,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView tollTypeImage;
     private ImageView tollColorImage;
     private TextView tollSymbolTextView;
-    private FrameLayout layers;
-    private GridLayout presetLayout;
+
+    private RelativeLayout layers;
+
+    private CropView cropView;
+    private PresetView presetView;
+    private CustomTextView customTextView;
 
     private DrawHelper helper;
 
     private Context context;
+
 
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -85,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             helper = new DrawHelper(context, symbolSize, color, symbol, toolSize, width, height);
 
-            layers.addView(new CustomTextView(context, helper.getSurface()));
+            customTextView = new CustomTextView(context, helper.getSurface());
+            customTextView.setOnTouchListener((View.OnTouchListener) context);
+
+            layers.addView(customTextView);
 
             updateViews();
 
@@ -93,22 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     };
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 2) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(context, permissions[0], Toast.LENGTH_SHORT).show();
-                //showExtDirFilesCount();
-            }
-            if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(context, permissions[1], Toast.LENGTH_SHORT).show();
-                // showUnreadSmsCount();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 
 
     @Override
@@ -124,13 +120,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tollSymbolTextView = (TextView) findViewById(R.id.tool_symbol_text);
         symbolSizeTextView = (TextView) findViewById(R.id.symbol_size_text);
 
-        presetLayout = (GridLayout) findViewById(R.id.presetLayout);
-
-        layers = (FrameLayout) findViewById(R.id.layers);
+        layers = (RelativeLayout) findViewById(R.id.layers);
         layers.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.action_open:
                 if (FileHelper.getInstance(this).checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE))
                     OpenDialog.newInstance().show(getSupportFragmentManager(), OPEN_DIALOG);
-                else FileHelper.getInstance(this).requestMultiplePermissions();
+                else FileHelper.getInstance(this).requestReadPermissions();
 
                 return true;
             case R.id.action_save:
                 if (FileHelper.getInstance(this).checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     SaveDialog.newInstance().show(getSupportFragmentManager(), SAVE_DIALOG);
-                else FileHelper.getInstance(this).requestMultiplePermissions();
+                else FileHelper.getInstance(this).requestWritePermissions();
                 return true;
 
         }
@@ -197,25 +192,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     PresetPickerDialog.newInstance().show(getSupportFragmentManager(), PRESET_PICER_DIALOG);
                 }
                 break;
-            case R.id.presetCancel:
-                layers.removeView(helper.getPresetView());
-                helper.presetCancel();
-                break;
-            case R.id.presetConfirm:
-                layers.removeView(helper.getPresetView());
-                helper.presetConfirm();
-                break;
-            case R.id.presetScaleMinus:
-                helper.presetScaleMinus();
-                break;
-            case R.id.presetScalePlus:
-                helper.presetScalePlus();
-                break;
-            case R.id.presetRotate:
-                helper.presetRotate();
+
+            case R.id.resize_btn:
+                if (!helper.isActiveCrop()) {
+                    helper.prepareCrop();
+                    cropView = new CropView(context, helper);
+                    layers.addView(cropView);
+                }
                 break;
 
         }
+
     }
 
 
@@ -225,9 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (helper.isActivePreset()) ;
-                else
-                    helper.newHistoryNote();
+                helper.newHistoryNote();
                 return true;
             case MotionEvent.ACTION_MOVE:
 
@@ -237,22 +222,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int convertY = (int) (y / KOEF_HEIGHT);
                 int convertX = (int) (x / KOEF_WIDTH);
 
-                if (helper.isActivePreset())
-                    helper.move(convertX, convertY);
-                else
-                    helper.draw(convertX, convertY);
+                helper.draw(convertX, convertY);
                 return true;
 
             case MotionEvent.ACTION_UP:
-                if (helper.isActivePreset()) ;
-                else
-                    helper.endHistoryNote();
+
+                helper.endHistoryNote();
                 return true;
             default:
                 return false;
         }
 
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_CODE_READ && grantResults.length == 1)
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                OpenDialog.newInstance().show(getSupportFragmentManager(), OPEN_DIALOG);
+            else
+                Toast.makeText(context, R.string.storange_perm_isnt_granted, Toast.LENGTH_SHORT).show();
+
+
+        if (requestCode == PERMISSION_REQUEST_CODE_WRITE && grantResults.length == 1)
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                SaveDialog.newInstance().show(getSupportFragmentManager(), SAVE_DIALOG);
+            else
+                Toast.makeText(context, R.string.storange_perm_isnt_granted, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //Щоб показити діалог після підптвердженя PERMISSION.
+        //Якщо визвати метод супер класа, виникає:
+        //java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
     }
 
     @Override
@@ -272,10 +279,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tollSymbolTextView.setText(Character.toString((char) helper.getSymbolTool()));
         tollTypeImage.setImageResource(helper.getTool().getImage());
         tollColorImage.setBackgroundColor(helper.getColorTool());
-
-        if (helper.isActivePreset()) {
-            presetLayout.setVisibility(View.VISIBLE);
-        } else presetLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -311,7 +314,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void setSelectedPreset(Preset preset) {
         helper.preparePreset(preset);
-        layers.addView(helper.getPresetView());
+        presetView = new PresetView(context, helper);
+        layers.addView(presetView);
+
+    }
+
+    @Override
+    public void confirmPreset() {
+        layers.removeView(presetView);
+    }
+
+    @Override
+    public void cancelPreset() {
+        layers.removeView(presetView);
     }
 
     @Override
@@ -322,5 +337,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void load(String fileName) {
         helper.load(fileName);
+        customTextView.setSurface(helper.getSurface());
+        updateCanvas();
+    }
+
+    @Override
+    public void confirmCrop() {
+        customTextView.setSurface(helper.getSurface());
+        layers.removeView(cropView);
+        updateCanvas();
+    }
+
+    @Override
+    public void cancelCrop() {
+        layers.removeView(cropView);
     }
 }

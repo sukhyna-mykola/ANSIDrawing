@@ -8,4 +8,5 @@ public interface CallbackUpdate {
     void updateCanvas();
 
     void updateViews();
+
 }
