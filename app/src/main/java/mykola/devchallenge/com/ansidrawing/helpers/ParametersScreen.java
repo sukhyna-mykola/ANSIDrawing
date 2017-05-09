@@ -1,8 +1,5 @@
 package mykola.devchallenge.com.ansidrawing.helpers;
 
-/**
- * Created by mykola on 01.05.17.
- */
 
 public class ParametersScreen {
     private float REAL_HEIGHT, REAL_WIDTH;

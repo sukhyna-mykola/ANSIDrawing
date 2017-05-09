@@ -11,10 +11,6 @@ import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
-/**
- * Created by mykola on 23.04.17.
- */
-
 
 public class ToolPickerAdapter extends RecyclerView.Adapter<ToolPickerAdapter.ViewHolder> {
     private Tool[] data;

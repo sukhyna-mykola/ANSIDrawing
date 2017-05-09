@@ -2,9 +2,6 @@ package mykola.devchallenge.com.ansidrawing.models;
 
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
-/**
- * Created by mykola on 05.05.17.
- */
 
 public class Preset extends Tool {
     private Pixel[][] pixels;

@@ -17,9 +17,6 @@ import mykola.devchallenge.com.ansidrawing.adapters.ColorPickerAdapter;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackColor;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class ColorPickerDialog extends DialogFragment implements CallbackColor {
 

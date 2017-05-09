@@ -15,10 +15,6 @@ import android.widget.EditText;
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackFile;
 
-/**
- * Created by mykola on 04.05.17.
- */
-
 public class SaveDialog extends DialogFragment {
     private CallbackFile callbackFile;
 

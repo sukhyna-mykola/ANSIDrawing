@@ -10,11 +10,6 @@ import android.widget.TextView;
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSymbol;
 
-/**
- * Created by mykola on 23.04.17.
- */
-
-
 public class SymbolPickerAdapter extends RecyclerView.Adapter<SymbolPickerAdapter.ViewHolder> {
     private int[] data;
     private int selectedSymbol;

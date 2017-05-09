@@ -19,9 +19,6 @@ import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 
 import static mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog.SELECTED_SYMBOL;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class SymbolSizePickerDialog extends DialogFragment {
 

@@ -10,10 +10,6 @@ import android.widget.ImageView;
 import mykola.devchallenge.com.ansidrawing.R;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackColor;
 
-/**
- * Created by mykola on 23.04.17.
- */
-
 
 public class ColorPickerAdapter extends RecyclerView.Adapter<ColorPickerAdapter.ViewHolder> {
     private int[] data;

@@ -18,10 +18,6 @@ import mykola.devchallenge.com.ansidrawing.models.tools.ColorizeTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
-/**
- * Created by mykola on 01.05.17.
- */
-
 public class DrawHelper {
 
     private HistoryNote activeNote;
@@ -42,8 +38,7 @@ public class DrawHelper {
 
     private Surface surface;
 
-    private int oldX, oldY;
-
+    private Point old = new Point(0, 0);
 
     public Surface getSurface() {
         return surface;
@@ -93,10 +88,10 @@ public class DrawHelper {
 
     public void draw(int x, int y) {
 
-        if (oldX != x || oldY != x) {
+        if (old.getX() != x || old.getY() != x) {
 
-            oldX = x;
-            oldY = x;
+            old.setX(x);
+            old.setY(y);
 
             Pixel pixel = tool.draw(x, y, surface);
 
@@ -185,10 +180,10 @@ public class DrawHelper {
 
 
     public void move(int x, int y) {
-        if (oldX != x || oldY != x) {
+        if (old.getX() != x || old.getY() != x) {
 
-            oldX = x;
-            oldY = x;
+            old.setX(x);
+            old.setY(y);
 
             presetHelper.move(x, y);
         }

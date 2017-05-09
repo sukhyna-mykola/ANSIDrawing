@@ -6,9 +6,6 @@ import java.util.List;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.models.HistoryNote;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class HistoryHelper {
     private List<HistoryNote> notes;

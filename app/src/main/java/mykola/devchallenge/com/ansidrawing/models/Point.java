@@ -1,9 +1,5 @@
 package mykola.devchallenge.com.ansidrawing.models;
 
-/**
- * Created by mykola on 07.05.17.
- */
-
 
 public class Point {
     private int x;

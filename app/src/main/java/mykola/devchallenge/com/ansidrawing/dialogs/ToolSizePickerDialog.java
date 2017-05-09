@@ -18,9 +18,6 @@ import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSize;
 
 import static mykola.devchallenge.com.ansidrawing.dialogs.SymbolPickerDialog.SELECTED_SYMBOL;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class ToolSizePickerDialog extends DialogFragment {
 

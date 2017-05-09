@@ -4,9 +4,6 @@ import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 
-/**
- * Created by mykola on 01.05.17.
- */
 
 public abstract class Tool {
     protected ParametersTool parametersTool;

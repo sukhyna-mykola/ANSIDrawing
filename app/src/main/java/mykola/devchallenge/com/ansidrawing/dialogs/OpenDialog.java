@@ -18,9 +18,6 @@ import mykola.devchallenge.com.ansidrawing.callbacks.CallbackFile;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 import mykola.devchallenge.com.ansidrawing.helpers.FileHelper;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class OpenDialog extends DialogFragment implements CallbackFile {
 
@@ -29,8 +26,6 @@ public class OpenDialog extends DialogFragment implements CallbackFile {
 
     private RecyclerView list;
     private RecyclerView.Adapter adapter;
-
-    private DataHelper dataHelper;
 
     public static OpenDialog newInstance() {
 
@@ -44,8 +39,6 @@ public class OpenDialog extends DialogFragment implements CallbackFile {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        dataHelper = DataHelper.get(getContext());
 
         View v = LayoutInflater.from(getContext()).inflate(R.layout.list_picker_fragment, null);
 

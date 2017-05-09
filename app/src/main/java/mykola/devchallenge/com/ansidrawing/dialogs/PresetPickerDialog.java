@@ -18,9 +18,6 @@ import mykola.devchallenge.com.ansidrawing.callbacks.CallbackPreset;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 import mykola.devchallenge.com.ansidrawing.models.Preset;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class PresetPickerDialog extends DialogFragment implements CallbackPreset {
 

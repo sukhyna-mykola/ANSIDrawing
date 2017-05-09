@@ -12,9 +12,6 @@ import mykola.devchallenge.com.ansidrawing.models.tools.EraserTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.PencilTool;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class DataHelper {
 

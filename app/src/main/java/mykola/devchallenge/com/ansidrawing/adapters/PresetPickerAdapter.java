@@ -12,11 +12,6 @@ import mykola.devchallenge.com.ansidrawing.callbacks.CallbackPreset;
 import mykola.devchallenge.com.ansidrawing.models.Preset;
 
 
-/**
- * Created by mykola on 23.04.17.
- */
-
-
 public class PresetPickerAdapter extends RecyclerView.Adapter<PresetPickerAdapter.ViewHolder> {
     private Preset[] data;
     private CallbackPreset callbackPreset;

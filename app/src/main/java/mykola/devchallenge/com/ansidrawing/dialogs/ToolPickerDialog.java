@@ -21,9 +21,6 @@ import mykola.devchallenge.com.ansidrawing.callbacks.CallbackTool;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 import mykola.devchallenge.com.ansidrawing.models.tools.Tool;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class ToolPickerDialog extends DialogFragment implements CallbackTool {
 

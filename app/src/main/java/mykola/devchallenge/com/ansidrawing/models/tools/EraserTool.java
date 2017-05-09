@@ -7,9 +7,6 @@ import mykola.devchallenge.com.ansidrawing.models.ParametersTool;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 
-/**
- * Created by mykola on 01.05.17.
- */
 
 public class EraserTool extends Tool {
     public static final String ERASER = "ERASER";

@@ -4,23 +4,29 @@ import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Point;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 
-/**
- * Created by mykola on 07.05.17.
- */
 
 public class CropHelper {
-
     private static final int DELTA = 30;
-    private Point ltMarker;
-    private Point rbMarker;
 
+    protected Point ltMarker;
+    protected Point rbMarker;
 
     public CropHelper(Point ltMarker, Point rbMarker) {
         this.ltMarker = ltMarker;
         this.rbMarker = rbMarker;
     }
 
+    public Point getRbMarker() {
+        return rbMarker;
+    }
+
+    public Point getLtMarker() {
+        return ltMarker;
+    }
+
     public Surface crop(Surface surface) {
+
+
         int newWidth = rbMarker.getX() - ltMarker.getX();
         int newHeight = rbMarker.getY() - ltMarker.getY();
 
@@ -31,7 +37,7 @@ public class CropHelper {
 
         for (int i = 0; i < pixels.length; i++) {
             for (int j = 0; j < pixels[0].length; j++) {
-                Pixel p = surface.getPixel(i + ltMarker.getY(), j + ltMarker.getY());
+                Pixel p = surface.getPixel(i + ltMarker.getX(), j + ltMarker.getY());
                 if (p != null)
                     pixels[i][j] = p.clone();
 
@@ -41,14 +47,6 @@ public class CropHelper {
         return new Surface(pixels);
     }
 
-
-    public Point getLtMarker() {
-        return ltMarker;
-    }
-
-    public Point getRbMarker() {
-        return rbMarker;
-    }
 
     public void checkCorrectCoordinates(Point p) {
         if (p == ltMarker) {
@@ -74,6 +72,7 @@ public class CropHelper {
         }
 
 
-
     }
 }
+
+

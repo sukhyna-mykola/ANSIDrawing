@@ -17,9 +17,6 @@ import mykola.devchallenge.com.ansidrawing.adapters.SymbolPickerAdapter;
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackSymbol;
 import mykola.devchallenge.com.ansidrawing.helpers.DataHelper;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class SymbolPickerDialog extends DialogFragment implements CallbackSymbol {
 

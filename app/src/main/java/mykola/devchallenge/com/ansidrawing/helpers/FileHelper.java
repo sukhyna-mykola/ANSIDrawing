@@ -25,9 +25,7 @@ import java.util.List;
 import mykola.devchallenge.com.ansidrawing.models.Pixel;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 
-/**
- * Created by mykola on 06.05.17.
- */
+
 
 public class FileHelper {
 

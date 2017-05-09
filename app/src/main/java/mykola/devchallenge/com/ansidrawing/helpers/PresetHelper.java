@@ -7,9 +7,6 @@ import mykola.devchallenge.com.ansidrawing.models.Preset;
 import mykola.devchallenge.com.ansidrawing.models.Surface;
 import mykola.devchallenge.com.ansidrawing.views.CustomTextView;
 
-/**
- * Created by mykola on 05.05.17.
- */
 
 public class PresetHelper {
 

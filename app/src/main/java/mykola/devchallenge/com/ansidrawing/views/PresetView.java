@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
@@ -18,9 +17,6 @@ import mykola.devchallenge.com.ansidrawing.helpers.PresetHelper;
 import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_HEIGHT;
 import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_WIDTH;
 
-/**
- * Created by mykola on 07.05.17.
- */
 
 public class PresetView extends RelativeLayout implements View.OnTouchListener, View.OnClickListener {
     private DrawHelper drawHelper;

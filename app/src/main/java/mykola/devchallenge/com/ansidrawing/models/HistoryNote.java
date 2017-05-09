@@ -1,8 +1,5 @@
 package mykola.devchallenge.com.ansidrawing.models;
 
-/**
- * Created by mykola on 04.05.17.
- */
 
 public class HistoryNote {
     private String action;

@@ -22,9 +22,6 @@ import mykola.devchallenge.com.ansidrawing.models.Point;
 import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_HEIGHT;
 import static mykola.devchallenge.com.ansidrawing.helpers.ParametersScreen.KOEF_WIDTH;
 
-/**
- * Created by mykola on 07.05.17.
- */
 
 public class CropView extends FrameLayout implements View.OnTouchListener, View.OnClickListener {
     private DrawHelper drawHelper;
@@ -118,14 +115,14 @@ public class CropView extends FrameLayout implements View.OnTouchListener, View.
         float y = event.getY();
 
         if (x < 0)
-            x = KOEF_WIDTH;
+            x = 0;
         if (x > getWidth())
-            x = getWidth() -  KOEF_WIDTH;
+            x = getWidth();
 
         if (y < 0)
-            y = KOEF_HEIGHT;
+            y = 0;
         if (y > getHeight())
-            y = getHeight() -  KOEF_HEIGHT;
+            y = getHeight();
 
         int convertY = (int) (y / KOEF_HEIGHT);
         int convertX = (int) (x / KOEF_WIDTH);

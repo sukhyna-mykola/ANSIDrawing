@@ -10,9 +10,6 @@ import java.util.List;
 
 import mykola.devchallenge.com.ansidrawing.callbacks.CallbackFile;
 
-/**
- * Created by mykola on 23.04.17.
- */
 
 
 public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.ViewHolder> {
